@@ -22,6 +22,22 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/black.ttf",
+            "./assets/fonts/bold.ttf",
+            "./assets/fonts/light.ttf",
+            "./assets/fonts/medium.ttf",
+            "./assets/fonts/regular.ttf",
+            "./assets/fonts/thin.ttf",
+            "./assets/fonts/thinitalic.ttf"
+          ]
+        }
+      ]
+    ]
   }
 }
