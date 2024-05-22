@@ -10,45 +10,69 @@ import {
 import React, { useState } from "react";
 import { fonts } from "../../globals/fonts";
 import { useNavigation, useTheme } from "@react-navigation/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { colors } from "../../globals/colors";
 
 const Email = () => {
   const navigation = useNavigation();
   const { colors } = useTheme();
+
+  const [email, setEmail] = useState("");
+
+  const [isEmail, setIsEmail] = useState(false);
+
+  const onConfirm = () => {
+    navigation.navigate("Login");
+  };
 
   return (
     <View
       style={[styles.mainContainer, { backgroundColor: colors.background }]}>
       <View style={styles.topView}>
         <Text style={[styles.pageTitle, { color: colors.text }]}>
-          Register.
+          Forgot Password.
         </Text>
         <Text style={[styles.pageDescription, { color: colors.text }]}>
-          Enter your email to be used as backup for your account
+          Enter your email to reset password
         </Text>
       </View>
-      <View style={styles.emailInputCover}>
+      <View
+        style={[
+          styles.loginInputCover,
+          isEmail && styles.loginInputCoverActive,
+        ]}>
+        <Ionicons name="mail" style={styles.inputIcons} />
         <TextInput
           style={[
             styles.inputView,
-            { borderBottomColor: colors.grey, color: colors.text },
+            {
+              borderBottomColor: colors.grey,
+              color: colors.card,
+            },
           ]}
-          placeholder="Email"
+          value={email}
+          placeholder="Enter Email"
           placeholderTextColor={colors.grey}
+          onChangeText={(value) => {
+            setEmail(value);
+          }}
+          onFocus={() => setIsEmail(true)}
+          onBlur={() => setIsEmail(false)}
         />
       </View>
       <View style={styles.navigationView}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Pin")}
+          onPress={onConfirm}
           style={[styles.button, { backgroundColor: colors.button }]}>
           <Text style={[styles.buttonText, { color: colors.buttonText }]}>
-            Next
+            Confirm
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => navigation.navigate("Login")}
           style={styles.loginButton}>
           <Text style={[styles.loginButtonText, { color: colors.text }]}>
-            Already have an account?<Text style={styles.loginText}> Login</Text>
+            Go back?<Text style={styles.loginText}> Login</Text>
           </Text>
         </TouchableOpacity>
       </View>
@@ -66,7 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 20,
     paddingTop: 50,
-    paddingVertical: 50,
+    paddingVertical: 20,
   },
   pageTitle: {
     fontFamily: "bold",
@@ -75,20 +99,28 @@ const styles = StyleSheet.create({
   pageDescription: {
     fontFamily: "regular",
   },
-  inputViewCover: {
-    marginVertical: 5,
-  },
-  inputViewTitle: {
-    fontFamily: "bold",
-    // color: colors.text,
+  loginInputCover: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: colors.line,
+    borderRadius: 10,
+    marginHorizontal: 20,
+    marginVertical: 10,
+    paddingHorizontal: 15,
     paddingVertical: 10,
   },
+  loginInputCoverActive: {
+    borderBottomColor: colors.text,
+  },
   inputView: {
-    padding: 10,
-    borderBottomWidth: 0.5,
-    // backgroundColor: colors.line,
-    width: Dimensions.get("window").width * 0.9,
-    fontSize: 20,
+    flex: 1,
+    fontSize: 16,
+  },
+  inputIcons: {
+    fontSize: 25,
+    color: colors.line,
+    marginRight: 10,
   },
   emailInputCover: {
     flexDirection: "row",
@@ -121,8 +153,9 @@ const styles = StyleSheet.create({
     fontFamily: "bold",
   },
   navigationView: {
-    position: "absolute",
-    bottom: 30,
+    marginTop: 30,
     alignSelf: "center",
+    width: "100%",
+    paddingHorizontal: 20,
   },
 });

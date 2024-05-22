@@ -29,6 +29,9 @@ const Register = () => {
   const [isPhone, setIsPhone] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPassword, setIsConfirmPassword] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+    useState(false);
 
   const [loading, setLoading] = useState(false);
 
@@ -56,7 +59,7 @@ const Register = () => {
             { borderBottomColor: colors.grey, color: colors.text },
           ]}
           value={name}
-          placeholder="Enter your Name"
+          placeholder="Name"
           placeholderTextColor={colors.border}
           onChangeText={(value) => setName(value)}
           onFocus={() => setIsName(true)}
@@ -72,7 +75,7 @@ const Register = () => {
             { borderBottomColor: colors.grey, color: colors.text },
           ]}
           value={email}
-          placeholder="Enter your Email"
+          placeholder="Email"
           placeholderTextColor={colors.border}
           onChangeText={(value) => setEmail(value)}
           onFocus={() => setIsEmail(true)}
@@ -88,7 +91,7 @@ const Register = () => {
             { borderBottomColor: colors.grey, color: colors.text },
           ]}
           value={phone}
-          placeholder="Enter Phone Number"
+          placeholder="Phone Number"
           placeholderTextColor={colors.grey}
           onChangeText={(value) => setPhone(value)}
           onFocus={() => setIsPhone(true)}
@@ -105,7 +108,7 @@ const Register = () => {
           ]}
           secureTextEntry={!isPasswordVisible}
           value={password}
-          placeholder="Enter Password"
+          placeholder="Password"
           placeholderTextColor={colors.grey}
           onChangeText={(value) => setPassword(value)}
           onFocus={() => setIsPassword(true)}
@@ -119,7 +122,31 @@ const Register = () => {
           />
         </TouchableOpacity>
       </View>
-
+      <View style={[styles.inputCover, isPassword && styles.inputCoverActive]}>
+        <Ionicons name="lock-closed" style={styles.inputIcon} />
+        <TextInput
+          style={[
+            styles.inputView,
+            { borderBottomColor: colors.grey, color: colors.card },
+          ]}
+          secureTextEntry={!isPasswordVisible}
+          value={password}
+          placeholder="Confirm Password"
+          placeholderTextColor={colors.grey}
+          onChangeText={(value) => setConfirmPassword(value)}
+          onFocus={() => setIsConfirmPassword(true)}
+          onBlur={() => setIsConfirmPassword(false)}
+        />
+        <TouchableOpacity
+          onPress={() =>
+            setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
+          }>
+          <Ionicons
+            name={isPasswordVisible ? "eye-off" : "eye"}
+            style={styles.inputIcon}
+          />
+        </TouchableOpacity>
+      </View>
       <View style={styles.navigationView}>
         <TouchableOpacity
           onPress={onNext}

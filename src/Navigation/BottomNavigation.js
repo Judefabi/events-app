@@ -19,12 +19,10 @@ export function BottomNavigation() {
 
           if (route.name === "Home") {
             iconName = focused ? "home" : "home-outline";
-          } else if (route.name === "Pay") {
-            iconName = focused ? "cash" : "cash-outline";
+          } else if (route.name === "Feed") {
+            iconName = focused ? "calendar" : "calendar-outline";
           } else if (route.name === "Profile") {
             iconName = focused ? "person" : "person-outline";
-          } else if (route.name === "Groups") {
-            iconName = focused ? "people" : "people-outline";
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -37,7 +35,7 @@ export function BottomNavigation() {
         },
       })}>
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Pay" component={FeedStack} />
+      <Tab.Screen name="Feed" component={FeedStack} />
       <Tab.Screen name="Profile" component={ProfileStack} />
     </Tab.Navigator>
   );

@@ -25,7 +25,22 @@ const Login = () => {
   const [isPassword, setIsPassword] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  console.log(isPasswordVisible);
+  const [isRemember, setIsRemember] = useState(false);
+
+  console.log(isRemember);
+
+  const onLogin = () => {
+    navigation.navigate("Home Stack");
+  };
+  const onRegister = () => {
+    navigation.navigate("Register");
+  };
+
+  const onGoogle = () => {};
+
+  const onForgotPass = () => {
+    navigation.navigate("Forgot Password");
+  };
 
   return (
     <ScrollView
@@ -89,19 +104,33 @@ const Login = () => {
           />
         </TouchableOpacity>
       </View>
+      <View style={styles.userOptions}>
+        {/* <View style={styles.rememberView}>
+          <TouchableOpacity
+            style={styles.rememberButton}
+            onPress={() => setIsRemember(!isRemember)}>
+            {isRemember ? (
+              <Ionicons name="checkmark" style={styles.checkmarkIcon} />
+            ) : null}
+          </TouchableOpacity>
+          <Text style={styles.rememberText}>Remember Me</Text>
+        </View> */}
+        <TouchableOpacity onPress={onForgotPass} style={styles.forgotView}>
+          <Text style={styles.forgotText}>Forgot Password?</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.navigationView}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Pin")}
+          onPress={onLogin}
           style={[styles.button, { backgroundColor: colors.button }]}>
           <Text style={[styles.buttonText, { color: colors.buttonText }]}>
-            Next
+            Login
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Login")}
-          style={styles.loginButton}>
+        <TouchableOpacity onPress={onRegister} style={styles.loginButton}>
           <Text style={[styles.loginButtonText, { color: colors.text }]}>
-            Already have an account?<Text style={styles.loginText}> Login</Text>
+            Don't have an account?
+            <Text style={styles.loginText}> Register</Text>
           </Text>
         </TouchableOpacity>
         <View style={styles.orView}>
@@ -109,7 +138,7 @@ const Login = () => {
           <Text style={styles.orText}>OR</Text>
           <View style={styles.sideLines} />
         </View>
-        <TouchableOpacity style={styles.googleButton}>
+        <TouchableOpacity onPress={onGoogle} style={styles.googleButton}>
           <Image style={styles.googleImage} source={googleicon} />
           <Text style={[styles.buttonText, styles.googleButtonText]}>
             Continue with Google
@@ -163,6 +192,36 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: colors.line,
     marginRight: 10,
+  },
+  userOptions: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
+  rememberView: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  rememberButton: {
+    borderWidth: 1,
+    borderRadius: 5,
+    height: 25,
+    width: 25,
+  },
+  checkmarkIcon: {
+    color: colors.green,
+    fontSize: 20,
+    fontFamily: "black",
+  },
+  rememberText: {
+    marginHorizontal: 5,
+    fontFamily: "bold",
+  },
+  forgotView: {},
+  forgotText: {
+    fontFamily: "bold",
+    color: colors.red,
   },
   button: {
     width: Dimensions.get("window").width * 0.9,

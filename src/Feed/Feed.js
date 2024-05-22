@@ -1,15 +1,15 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 
-const Home = () => {
+const Feed = () => {
   return (
     <View style={styles.mainContainer}>
-      <Text>Home</Text>
+      <Text>Feed</Text>
     </View>
   );
 };
 
-export default Home;
+export default Feed;
 
 const styles = StyleSheet.create({
   mainContainer: {

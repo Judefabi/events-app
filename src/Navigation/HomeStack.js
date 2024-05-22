@@ -13,7 +13,7 @@ const HomeStack = () => {
         headerShown: false,
       }}>
       {/* <Stack.Screen name="Home Stack" component={Home} /> */}
-      <Stack.Screen name="Home Stack" component={BottomNavigation} />
+      <Stack.Screen name="Home Screen" component={BottomNavigation} />
       <Stack.Screen
         options={{ tabBarVisible: false }}
         name="Accounts Stack"

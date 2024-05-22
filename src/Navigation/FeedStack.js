@@ -1,6 +1,7 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Feed from "../Feed/Feed";
 
 const Stack = createNativeStackNavigator();
 
@@ -10,10 +11,11 @@ const FeedStack = () => {
       screenOptions={{
         headerShown: false,
       }}>
+      <Stack.Screen name="Feed Stack" component={Feed} />
     </Stack.Navigator>
   );
 };
 
 export default FeedStack;
 
-const styles = StyleSheet.create({});
+
