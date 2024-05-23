@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
+  FlatList,
 } from "react-native";
 import React, { useState } from "react";
 import LoadingSkeleton from "../../skeletons/Home/home";
@@ -23,13 +24,11 @@ const Home = () => {
   const [searchInput, setSearchInput] = useState("");
   const [isToday, setIsToday] = useState(true);
 
-  console.log(isToday);
-
   if (loading) {
     return <LoadingSkeleton />;
   }
   return (
-    <ScrollView style={styles.mainContainer}>
+    <View style={styles.mainContainer}>
       <View style={styles.topView}>
         <View style={styles.topLeft}>
           <Text style={styles.name}>{name}</Text>
@@ -88,11 +87,12 @@ const Home = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.featuredView}>
-          {events.map((event, index) => {
-            <HorizontalCard event={event} index={index} />;
-          })}
-        </View>
+        <FlatList
+          horizontal
+          data={events}
+          renderItem={({ item }) => <HorizontalCard event={item} />}
+          keyExtractor={(item) => item.id}
+        />
       </View>
       <View style={styles.otherEventsView}>
         <View style={styles.featuredEventsTitleView}>
@@ -105,7 +105,7 @@ const Home = () => {
         </View>
         <View style={styles.interestingEventsView}></View>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     paddingHorizontal: 15,
     paddingVertical: 10,
+    backgroundColor: colors.line,
   },
   searchInputView: {
     flex: 1,
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
   },
   inputIcons: {
     fontSize: 25,
-    color: colors.line,
+    color: colors.text,
     marginRight: 10,
   },
   featuredEventsView: {
@@ -203,5 +204,9 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontFamily: "black",
     fontSize: 16,
+  },
+  featuredView: {
+    paddingVertical: 20,
+    flexDirection: "row",
   },
 });

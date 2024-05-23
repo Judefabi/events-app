@@ -7,7 +7,7 @@ const events = [
     location: "Central Park, New York",
     description: "Join us for an evening of live music in the park.",
     imageUrl: "https://source.unsplash.com/random/400x300?concert",
-    attendees: 150,
+    attendees: 15000,
   },
   {
     id: 2,
@@ -17,7 +17,7 @@ const events = [
     location: "Modern Art Museum, San Francisco",
     description: "Explore contemporary art by local artists.",
     imageUrl: "https://source.unsplash.com/random/400x300?art",
-    attendees: 75,
+    attendees: 750,
   },
   {
     id: 3,
@@ -27,7 +27,7 @@ const events = [
     location: "Downtown, Los Angeles",
     description: "Taste a variety of dishes from around the world.",
     imageUrl: "https://source.unsplash.com/random/400x300?food",
-    attendees: 200,
+    attendees: 20000,
   },
   {
     id: 4,
@@ -37,7 +37,7 @@ const events = [
     location: "Convention Center, Seattle",
     description: "Join industry leaders for discussions on the latest in tech.",
     imageUrl: "https://source.unsplash.com/random/400x300?tech",
-    attendees: 300,
+    attendees: 3000,
   },
   {
     id: 5,
@@ -47,7 +47,7 @@ const events = [
     location: "Beachfront, Miami",
     description: "Start your day with a relaxing yoga session by the sea.",
     imageUrl: "https://source.unsplash.com/random/400x300?yoga",
-    attendees: 50,
+    attendees: 500,
   },
   {
     id: 6,
@@ -57,7 +57,7 @@ const events = [
     location: "City Library, Boston",
     description: "Meet authors and discover new books.",
     imageUrl: "https://source.unsplash.com/random/400x300?books",
-    attendees: 120,
+    attendees: 1200,
   },
   {
     id: 7,
@@ -67,7 +67,7 @@ const events = [
     location: "Riverside Park, Chicago",
     description: "Participate in a run to raise funds for a good cause.",
     imageUrl: "https://source.unsplash.com/random/400x300?run",
-    attendees: 180,
+    attendees: 1800,
   },
   {
     id: 8,
@@ -77,7 +77,7 @@ const events = [
     location: "Outdoor Cinema, Austin",
     description: "Enjoy an outdoor screening of a classic movie.",
     imageUrl: "https://source.unsplash.com/random/400x300?film",
-    attendees: 90,
+    attendees: 300,
   },
   {
     id: 9,
@@ -87,7 +87,7 @@ const events = [
     location: "Town Square, Portland",
     description: "Shop for fresh produce and homemade goods.",
     imageUrl: "https://source.unsplash.com/random/400x300?market",
-    attendees: 160,
+    attendees: 1600,
   },
   {
     id: 10,
@@ -97,7 +97,7 @@ const events = [
     location: "Grand Theater, Atlanta",
     description: "Watch a live performance of a popular play.",
     imageUrl: "https://source.unsplash.com/random/400x300?theater",
-    attendees: 130,
+    attendees: 600,
   },
 ];
 
