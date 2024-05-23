@@ -2,7 +2,8 @@ const userProfile = {
   id: 1,
   name: "Jane Doe",
   email: "janedoe@example.com",
-  profileImage: "https://unsplash.com/photos/i2hoD-C2RUA?w=400&h=300",
+  profileImage:
+    "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
   bio: "A passionate traveler and food lover. Enjoys yoga and reading in her spare time.",
   location: "New York, NY",
   interests: ["Travel", "Food", "Yoga", "Reading"],
