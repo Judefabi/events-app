@@ -31,7 +31,8 @@ import { StatusBar, Text, View, useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { lightTheme, darkTheme } from "./globals/colors";
 import AuthStack from "./src/Navigation/Authstack";
-import { FontProvider, useFontContext } from "./contexts/fontcontext"; 
+import { FontProvider, useFontContext } from "./contexts/fontcontext";
+import HomeStack from "./src/Navigation/HomeStack";
 
 const AppContent = () => {
   const colorScheme = useColorScheme();
@@ -44,8 +45,8 @@ const AppContent = () => {
 
   return (
     <NavigationContainer theme={theme}>
-      {/* <BottomNavigation /> */}
-      <AuthStack />
+      <HomeStack />
+      {/* <AuthStack /> */}
     </NavigationContainer>
   );
 };
