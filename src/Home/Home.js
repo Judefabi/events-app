@@ -16,22 +16,44 @@ import { colors } from "../../globals/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import events from "../../models/eventsModel";
 import HorizontalCard from "../Components/HorizontalCard";
+import VerticalCard from "../Components/VerticalCard";
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
   const { name, location, profileImage } = userProfile;
 
   const [searchInput, setSearchInput] = useState("");
+  const [isSearch, setIsSearch] = useState(false);
   const [isToday, setIsToday] = useState(true);
 
   if (loading) {
     return <LoadingSkeleton />;
   }
+
+  const popularSearches = [
+    {
+      name: "Sauti Sol",
+      id: 1,
+    },
+    {
+      name: "GDG Nairobi",
+      id: 2,
+    },
+    {
+      name: "Rhumba",
+      id: 3,
+    },
+    {
+      name: "Bensoul",
+      id: 4,
+    },
+  ];
+
   return (
-    <View style={styles.mainContainer}>
+    <ScrollView style={styles.mainContainer}>
       <View style={styles.topView}>
         <View style={styles.topLeft}>
-          <Text style={styles.name}>{name}</Text>
+          <Text style={styles.name}>Hey, {name}</Text>
           <View style={styles.locationView}>
             <Ionicons style={styles.locationIcon} name="location-sharp" />
             <Text style={styles.location}>{location}</Text>
@@ -56,8 +78,22 @@ const Home = () => {
           onChangeText={(value) => {
             setSearchInput(value);
           }}
+          onFocus={() => setIsSearch(true)}
+          onBlur={() => setIsSearch(false)}
         />
       </View>
+      {isSearch ? (
+        <View style={styles.popularView}>
+          <Text style={styles.popularSearchTitle}>Popular searches:</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {popularSearches.map((search, index) => (
+              <View key={index} style={styles.popularPill}>
+                <Text style={styles.popularPillText}>{search.name}</Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+      ) : null}
       <View style={styles.featuredEventsView}>
         <View style={styles.featuredEventsTitleView}>
           <Text style={styles.featuredEventsTitle}>Upcoming events</Text>
@@ -87,12 +123,11 @@ const Home = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        <FlatList
-          horizontal
-          data={events}
-          renderItem={({ item }) => <HorizontalCard event={item} />}
-          keyExtractor={(item) => item.id}
-        />
+        <ScrollView horizontal>
+          {events.map((item, index) => (
+            <HorizontalCard key={index} event={item} />
+          ))}
+        </ScrollView>
       </View>
       <View style={styles.otherEventsView}>
         <View style={styles.featuredEventsTitleView}>
@@ -103,9 +138,19 @@ const Home = () => {
             <Text style={styles.viewAllText}>View All</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.interestingEventsView}></View>
+        <View style={styles.interestingEventsView}>
+          {events.map((item, index) => (
+            <VerticalCard key={index} event={item} />
+          ))}
+          {/* <FlatList
+            showsVerticalScrollIndicator={false}
+            data={events}
+            renderItem={({ item }) => <VerticalCard event={item} />}
+            keyExtractor={(item) => item.id}
+          /> */}
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -125,6 +170,7 @@ const styles = StyleSheet.create({
   name: {
     color: colors.text,
     fontFamily: "black",
+    fontSize: 24,
   },
   locationView: {
     flexDirection: "row",
@@ -146,13 +192,13 @@ const styles = StyleSheet.create({
   searchInputCover: {
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: colors.line,
     borderRadius: 10,
     marginVertical: 20,
     paddingHorizontal: 15,
     paddingVertical: 10,
-    backgroundColor: colors.line,
+    // backgroundColor: colors.line,
   },
   searchInputView: {
     flex: 1,
@@ -162,6 +208,22 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: colors.text,
     marginRight: 10,
+  },
+  popularView: {
+    flexDirection: "row",
+  },
+  popularSearchTitle: {
+    color: colors.text,
+  },
+  popularPill: {
+    backgroundColor: colors.line,
+    marginLeft: 5,
+    borderRadius: 10,
+  },
+  popularPillText: {
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    fontFamily: "medium",
   },
   featuredEventsView: {
     paddingVertical: 20,
@@ -177,7 +239,7 @@ const styles = StyleSheet.create({
   },
   viewAllButton: {},
   viewAllText: {
-    color: colors.grey,
+    color: colors.green,
     fontFamily: "medium",
   },
   tabsView: {
