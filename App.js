@@ -30,9 +30,8 @@ import React from "react";
 import { StatusBar, Text, View, useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { lightTheme, darkTheme } from "./globals/colors";
-import AuthStack from "./src/Navigation/Authstack";
 import { FontProvider, useFontContext } from "./contexts/fontcontext";
-import HomeStack from "./src/Navigation/HomeStack";
+import HomeStack from "./src/Admin/AdminNavigation/HomeStack";
 
 const AppContent = () => {
   const colorScheme = useColorScheme();

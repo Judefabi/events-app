@@ -1,9 +1,19 @@
 import React from "react";
-import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
-import { colors } from "../../globals/colors";
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
+import { colors } from "../../../globals/colors";
 
 const HorizontalCard = ({ event }) => {
+  const navigation = useNavigation();
+
   const { id, name, date, time, location, description, imageUrl, attendees } =
     event;
 
@@ -17,14 +27,26 @@ const HorizontalCard = ({ event }) => {
     }
   };
 
+  const onDetails = () => {
+    navigation.navigate("Event Details", {
+      event: event,
+    });
+  };
+
+  const onConfirmAttending = (id) => {
+    console.log("confirmed", id);
+  };
+
   return (
-    <View style={styles.card}>
+    <TouchableOpacity onPress={onDetails} style={styles.card}>
       <View style={styles.cardInnerView}>
         <Image style={styles.eventImage} source={{ uri: imageUrl }} />
         <View style={styles.imageOverlayView}>
-          <View style={styles.joinEventButtonView}>
-            <Text style={styles.joinEventButtonText}>Confirm Attending</Text>
-          </View>
+          <TouchableOpacity
+            onPress={() => onConfirmAttending(id)}
+            style={styles.joinEventButtonView}>
+            <Text style={styles.joinEventButtonText}>View Attendance</Text>
+          </TouchableOpacity>
           <View style={styles.attendeesContainer}>
             {attendees.slice(0, 3).map((attendee, index) => (
               <React.Fragment key={attendee.id}>
@@ -60,7 +82,7 @@ const HorizontalCard = ({ event }) => {
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

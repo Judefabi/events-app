@@ -2,11 +2,11 @@ import { StyleSheet } from "react-native";
 import React, { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { BottomNavigation } from "./BottomNavigation";
+import { BottomNavigation } from "../User/UserNavigation/BottomNavigation";
 import Register from "../Authentication/Register";
 import Email from "../Authentication/Email";
 import Login from "../Authentication/Login";
-import HomeStack from "./HomeStack";
+import HomeStack from "../User/UserNavigation/HomeStack";
 import { useTheme } from "@react-navigation/native";
 
 const Stack = createNativeStackNavigator();

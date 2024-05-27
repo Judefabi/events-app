@@ -10,13 +10,14 @@ import {
   FlatList,
 } from "react-native";
 import React, { useState } from "react";
-import LoadingSkeleton from "../../skeletons/Home/home";
-import userProfile from "../../models/userModel";
-import { colors } from "../../globals/colors";
+import LoadingSkeleton from "../../../skeletons/Home/home";
+import userProfile from "../../../models/userModel";
+import { colors } from "../../../globals/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import events from "../../models/eventsModel";
-import HorizontalCard from "../Components/HorizontalCard";
-import VerticalCard from "../Components/VerticalCard";
+import events from "../../../models/eventsModel";
+import HorizontalCard from "../../Components/HorizontalCard";
+import VerticalCard from "../../Components/VerticalCard";
+import { useNavigation } from "@react-navigation/native";
 
 const Home = () => {
   const [loading, setLoading] = useState(false);

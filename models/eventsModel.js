@@ -1,114 +1,10 @@
-// const events = [
-//   {
-//     id: 1,
-//     name: "Concert in the Park",
-//     date: "2023-05-23",
-//     time: "18:00",
-//     location: "Central Park, New York",
-//     description: "Join us for an evening of live music in the park.",
-//     imageUrl: "https://source.unsplash.com/random/400x300?concert",
-//     attendees: 15000,
-//   },
-//   {
-//     id: 2,
-//     name: "Art Exhibition",
-//     date: "2023-05-24",
-//     time: "10:00",
-//     location: "Modern Art Museum, San Francisco",
-//     description: "Explore contemporary art by local artists.",
-//     imageUrl: "https://source.unsplash.com/random/400x300?art",
-//     attendees: 750,
-//   },
-//   {
-//     id: 3,
-//     name: "Food Festival",
-//     date: "2023-05-25",
-//     time: "12:00",
-//     location: "Downtown, Los Angeles",
-//     description: "Taste a variety of dishes from around the world.",
-//     imageUrl: "https://source.unsplash.com/random/400x300?food",
-//     attendees: 20000,
-//   },
-//   {
-//     id: 4,
-//     name: "Tech Conference",
-//     date: "2023-05-26",
-//     time: "09:00",
-//     location: "Convention Center, Seattle",
-//     description: "Join industry leaders for discussions on the latest in tech.",
-//     imageUrl: "https://source.unsplash.com/random/400x300?tech",
-//     attendees: 3000,
-//   },
-//   {
-//     id: 5,
-//     name: "Yoga Workshop",
-//     date: "2023-05-27",
-//     time: "08:00",
-//     location: "Beachfront, Miami",
-//     description: "Start your day with a relaxing yoga session by the sea.",
-//     imageUrl: "https://source.unsplash.com/random/400x300?yoga",
-//     attendees: 500,
-//   },
-//   {
-//     id: 6,
-//     name: "Book Fair",
-//     date: "2023-05-28",
-//     time: "11:00",
-//     location: "City Library, Boston",
-//     description: "Meet authors and discover new books.",
-//     imageUrl: "https://source.unsplash.com/random/400x300?books",
-//     attendees: 1200,
-//   },
-//   {
-//     id: 7,
-//     name: "Charity Run",
-//     date: "2023-05-29",
-//     time: "07:00",
-//     location: "Riverside Park, Chicago",
-//     description: "Participate in a run to raise funds for a good cause.",
-//     imageUrl: "https://source.unsplash.com/random/400x300?run",
-//     attendees: 1800,
-//   },
-//   {
-//     id: 8,
-//     name: "Film Screening",
-//     date: "2023-05-30",
-//     time: "19:00",
-//     location: "Outdoor Cinema, Austin",
-//     description: "Enjoy an outdoor screening of a classic movie.",
-//     imageUrl: "https://source.unsplash.com/random/400x300?film",
-//     attendees: 300,
-//   },
-//   {
-//     id: 9,
-//     name: "Farmers Market",
-//     date: "2023-05-31",
-//     time: "09:00",
-//     location: "Town Square, Portland",
-//     description: "Shop for fresh produce and homemade goods.",
-//     imageUrl: "https://source.unsplash.com/random/400x300?market",
-//     attendees: 1600,
-//   },
-//   {
-//     id: 10,
-//     name: "Theater Play",
-//     date: "2023-06-01",
-//     time: "20:00",
-//     location: "Grand Theater, Atlanta",
-//     description: "Watch a live performance of a popular play.",
-//     imageUrl: "https://source.unsplash.com/random/400x300?theater",
-//     attendees: 600,
-//   },
-// ];
-
-// export default events;
-
 const events = [
   {
     id: 1,
     name: "Concert in the Park",
     date: "2023-05-23",
     time: "18:00",
+    creator: "judefabiano99@gmail.com",
     location: "Central Park, New York",
     description:
       "Join us for an evening of live music in the park. Experience the enchanting melodies of local bands while enjoying the serene atmosphere of Central Park.",
@@ -136,12 +32,32 @@ const events = [
       },
     ],
     tags: ["music", "outdoor", "community"],
+    tickets: 300,
+    ticketsSold: 250,
+    ticketRanges: [
+      {
+        id: 1,
+        type: "regular",
+        price: 1200,
+      },
+      {
+        id: 1,
+        type: "VIP",
+        price: 1700,
+      },
+      {
+        id: 1,
+        type: "VVIP",
+        price: 2500,
+      },
+    ],
   },
   {
     id: 2,
     name: "Art Exhibition",
     date: "2023-05-24",
     time: "10:00",
+    creator: "judefabiano99@gmail.com",
     location: "Modern Art Museum, San Francisco",
     description:
       "Immerse yourself in a diverse collection of contemporary artworks by emerging and established local artists. This exhibition showcases creativity in various forms, from paintings to sculptures.",
@@ -157,19 +73,34 @@ const events = [
         name: "Michael Brown",
         image: "https://randomuser.me/api/portraits/men/5.jpg",
       },
-      {
-        id: 6,
-        name: "Jessica Wilson",
-        image: "https://randomuser.me/api/portraits/women/6.jpg",
-      },
     ],
     tags: ["art", "exhibition", "culture"],
+    tickets: 300,
+    ticketsSold: 250,
+    ticketRanges: [
+      {
+        id: 1,
+        type: "regular",
+        price: 1200,
+      },
+      {
+        id: 1,
+        type: "VIP",
+        price: 1700,
+      },
+      {
+        id: 1,
+        type: "VVIP",
+        price: 2500,
+      },
+    ],
   },
   {
     id: 3,
     name: "Food Festival",
     date: "2023-05-25",
     time: "12:00",
+    creator: "judefabiano99@gmail.com",
     location: "Downtown, Los Angeles",
     description:
       "Embark on a culinary journey around the world at the Downtown Food Festival. Indulge in a wide array of dishes, from street food delights to gourmet creations, all in one vibrant location.",
@@ -192,12 +123,32 @@ const events = [
       },
     ],
     tags: ["food", "festival", "community"],
+    tickets: 300,
+    ticketsSold: 250,
+    ticketRanges: [
+      {
+        id: 1,
+        type: "regular",
+        price: 1200,
+      },
+      {
+        id: 1,
+        type: "VIP",
+        price: 1700,
+      },
+      {
+        id: 1,
+        type: "VVIP",
+        price: 2500,
+      },
+    ],
   },
   {
     id: 4,
     name: "Tech Conference",
     date: "2023-05-26",
     time: "09:00",
+    creator: "fabiano@gmail.com",
     location: "Convention Center, Seattle",
     description:
       "Connect with industry leaders and innovators at the Tech Conference in Seattle. Explore the latest trends in technology, attend insightful sessions, and network with like-minded professionals.",
@@ -220,12 +171,32 @@ const events = [
       },
     ],
     tags: ["technology", "conference", "networking"],
+    tickets: 300,
+    ticketsSold: 250,
+    ticketRanges: [
+      {
+        id: 1,
+        type: "regular",
+        price: 1200,
+      },
+      {
+        id: 1,
+        type: "VIP",
+        price: 1700,
+      },
+      {
+        id: 1,
+        type: "VVIP",
+        price: 2500,
+      },
+    ],
   },
   {
     id: 5,
     name: "Yoga Workshop",
     date: "2023-05-27",
     time: "08:00",
+    creator: "fabiano@gmail.com",
     location: "Beachfront, Miami",
     description:
       "Refresh your mind and body with a rejuvenating yoga session by the tranquil sea. Join us for a morning of relaxation and wellness at the Beachfront Yoga Workshop.",
@@ -248,12 +219,32 @@ const events = [
       },
     ],
     tags: ["yoga", "wellness", "beach"],
+    tickets: 300,
+    ticketsSold: 250,
+    ticketRanges: [
+      {
+        id: 1,
+        type: "regular",
+        price: 1200,
+      },
+      {
+        id: 1,
+        type: "VIP",
+        price: 1700,
+      },
+      {
+        id: 1,
+        type: "VVIP",
+        price: 2500,
+      },
+    ],
   },
   {
     id: 6,
     name: "Book Fair",
     date: "2023-05-28",
     time: "11:00",
+    creator: "fabiano@gmail.com",
     location: "City Library, Boston",
     description:
       "Discover literary treasures and meet your favorite authors at the City Library Book Fair. Explore a wide selection of books, from bestsellers to hidden gems.",
@@ -276,6 +267,25 @@ const events = [
       },
     ],
     tags: ["books", "fair", "community"],
+    tickets: 300,
+    ticketsSold: 250,
+    ticketRanges: [
+      {
+        id: 1,
+        type: "regular",
+        price: 1200,
+      },
+      {
+        id: 1,
+        type: "VIP",
+        price: 1700,
+      },
+      {
+        id: 1,
+        type: "VVIP",
+        price: 2500,
+      },
+    ],
   },
   {
     id: 7,
@@ -283,6 +293,7 @@ const events = [
     date: "2023-05-29",
     time: "07:00",
     location: "Riverside Park, Chicago",
+    creator: "fabianojude@gmail.com",
     description:
       "Run for a cause at the Riverside Park Charity Run. Lace up your shoes and join us in raising funds for local charities and making a positive impact in our community.",
     imageUrl: "https://source.unsplash.com/random/400x300?run",
@@ -304,6 +315,25 @@ const events = [
       },
     ],
     tags: ["charity", "run", "community"],
+    tickets: 300,
+    ticketsSold: 250,
+    ticketRanges: [
+      {
+        id: 1,
+        type: "regular",
+        price: 1200,
+      },
+      {
+        id: 1,
+        type: "VIP",
+        price: 1700,
+      },
+      {
+        id: 1,
+        type: "VVIP",
+        price: 2500,
+      },
+    ],
   },
   {
     id: 8,
@@ -311,6 +341,7 @@ const events = [
     date: "2023-05-30",
     time: "19:00",
     location: "Outdoor Cinema, Austin",
+    creator: "fabianosmith@gmail.com",
     description:
       "Experience the magic of cinema under the stars at the Outdoor Cinema Film Screening. Gather with friends and family for an unforgettable night of entertainment.",
     imageUrl: "https://source.unsplash.com/random/400x300?film",
@@ -332,12 +363,32 @@ const events = [
       },
     ],
     tags: ["film", "screening", "entertainment"],
+    tickets: 300,
+    ticketsSold: 250,
+    ticketRanges: [
+      {
+        id: 1,
+        type: "regular",
+        price: 1200,
+      },
+      {
+        id: 1,
+        type: "VIP",
+        price: 1700,
+      },
+      {
+        id: 1,
+        type: "VVIP",
+        price: 2500,
+      },
+    ],
   },
   {
     id: 9,
     name: "Farmers Market",
     date: "2023-05-31",
     time: "09:00",
+    creator: "fabiano@gmail.com",
     location: "Town Square, Portland",
     description:
       "Support local farmers and artisans at the Town Square Farmers Market. Shop for fresh produce, artisanal goods, and enjoy a vibrant community atmosphere.",
@@ -360,6 +411,25 @@ const events = [
       },
     ],
     tags: ["farmers market", "local", "community"],
+    tickets: 400,
+    ticketsSold: 150,
+    ticketRanges: [
+      {
+        id: 1,
+        type: "regular",
+        price: 1200,
+      },
+      {
+        id: 1,
+        type: "VIP",
+        price: 1700,
+      },
+      {
+        id: 1,
+        type: "VVIP",
+        price: 2500,
+      },
+    ],
   },
   {
     id: 10,
@@ -367,6 +437,7 @@ const events = [
     date: "2023-06-01",
     time: "20:00",
     location: "Grand Theater, Atlanta",
+    creator: "fabiano@gmail.com",
     description:
       "Immerse yourself in the world of theater with a captivating live performance at the Grand Theater. Experience the magic of storytelling brought to life on stage.",
     imageUrl: "https://source.unsplash.com/random/400x300?theater",
@@ -388,6 +459,25 @@ const events = [
       },
     ],
     tags: ["theater", "play", "arts"],
+    tickets: 500,
+    ticketsSold: 200,
+    ticketRanges: [
+      {
+        id: 1,
+        type: "regular",
+        price: 1200,
+      },
+      {
+        id: 1,
+        type: "VIP",
+        price: 1700,
+      },
+      {
+        id: 1,
+        type: "VVIP",
+        price: 5000,
+      },
+    ],
   },
 ];
 
