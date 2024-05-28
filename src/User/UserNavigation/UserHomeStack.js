@@ -8,7 +8,7 @@ import Events from "../Events/Events";
 
 const Stack = createNativeStackNavigator();
 
-const HomeStack = () => {
+const UserHomeStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -49,6 +49,4 @@ const HomeStack = () => {
   );
 };
 
-export default HomeStack;
-
-
+export default UserHomeStack;

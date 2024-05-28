@@ -31,7 +31,7 @@ import { StatusBar, Text, View, useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { lightTheme, darkTheme } from "./globals/colors";
 import { FontProvider, useFontContext } from "./contexts/fontcontext";
-import HomeStack from "./src/User/UserNavigation/HomeStack";
+import HomeStack from "./src/User/UserNavigation/UserHomeStack";
 import SuccessModal from "./common/SuccessModal";
 import LaunchScreen from "./src/Authentication/LaunchScreen";
 import AuthStack from "./src/MainNavigation/Authstack";

@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useReducer, useState } from "react";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import googleicon from "../../assets/googleicon.png";
@@ -19,7 +19,8 @@ const Register = ({ route }) => {
   const navigation = useNavigation();
   const { colors } = useTheme();
 
-  console.log("Details", route.params);
+  const userData = route.params;
+  console.log("Details", userData);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -38,7 +39,9 @@ const Register = ({ route }) => {
   const [loading, setLoading] = useState(false);
 
   const onNext = () => {
-    navigation.navigate("Login");
+    navigation.navigate("Login", {
+      userData,
+    });
   };
 
   return (

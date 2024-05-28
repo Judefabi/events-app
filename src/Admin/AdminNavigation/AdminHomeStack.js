@@ -12,7 +12,7 @@ import Events from "../Events/Events";
 
 const Stack = createNativeStackNavigator();
 
-const HomeStack = () => {
+const AdminHomeStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -113,6 +113,6 @@ const HomeStack = () => {
   );
 };
 
-export default HomeStack;
+export default AdminHomeStack;
 
 const styles = StyleSheet.create({});

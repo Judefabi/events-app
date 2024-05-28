@@ -6,9 +6,10 @@ import { BottomNavigation } from "../User/UserNavigation/BottomNavigation";
 import Register from "../Authentication/Register";
 import Email from "../Authentication/Email";
 import Login from "../Authentication/Login";
-import HomeStack from "../User/UserNavigation/HomeStack";
 import { useTheme } from "@react-navigation/native";
 import LaunchScreen from "../Authentication/LaunchScreen";
+import UserHomeStack from "../User/UserNavigation/UserHomeStack";
+import AdminHomeStack from "../Admin/AdminNavigation/AdminHomeStack";
 
 const Stack = createNativeStackNavigator();
 
@@ -43,7 +44,8 @@ const AuthStack = () => {
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Forgot Password" component={Email} />
       <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Home Stack" component={HomeStack} />
+      <Stack.Screen name="User Stack" component={UserHomeStack} />
+      <Stack.Screen name="Admin Stack" component={AdminHomeStack} />
     </Stack.Navigator>
   );
 };

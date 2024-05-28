@@ -55,8 +55,8 @@ const LaunchScreen = () => {
     navigation.navigate("Register", {
       type: "creator",
       userLocation: {
-        lat: location.coords.latitude,
-        lng: location.coords.longitude,
+        lat: location?.coords?.latitude,
+        lng: location?.coords?.longitude,
       },
     });
   };
@@ -65,8 +65,8 @@ const LaunchScreen = () => {
     navigation.navigate("Register", {
       type: "attendee",
       userLocation: {
-        lat: location.coords.latitude,
-        lng: location.coords.longitude,
+        lat: location?.coords?.latitude,
+        lng: location?.coords?.longitude,
       },
     });
   };

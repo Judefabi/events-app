@@ -14,9 +14,10 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import googleicon from "../../assets/googleicon.png";
 import { colors } from "../../globals/colors";
 
-const Login = () => {
+const Login = ({ route }) => {
   const navigation = useNavigation();
   const { colors } = useTheme();
+  const { type, userLocation } = route.params.userData;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,10 +28,12 @@ const Login = () => {
 
   const [isRemember, setIsRemember] = useState(false);
 
-  console.log(isRemember);
-
   const onLogin = () => {
-    navigation.navigate("Home Stack");
+    if (type === "creator") {
+      navigation.navigate("Admin Stack");
+    } else {
+      navigation.navigate("User Stack");
+    }
   };
   const onRegister = () => {
     navigation.navigate("Register");
