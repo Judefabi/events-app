@@ -1,4 +1,11 @@
-import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import { colors } from "../../../globals/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -20,11 +27,13 @@ const VerticalCard = ({ event }) => {
   };
 
   const onDetails = () => {
-    navigation.navigate("Event Details");
+    navigation.navigate("Event Details", {
+      event: event,
+    });
   };
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity onPress={onDetails} style={styles.card}>
       <View style={styles.cardInnerView}>
         <View style={styles.imageView}>
           <Image style={styles.eventImage} source={{ uri: imageUrl }} />
@@ -65,7 +74,7 @@ const VerticalCard = ({ event }) => {
           ))}
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
