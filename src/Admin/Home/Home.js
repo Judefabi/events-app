@@ -1,16 +1,15 @@
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   Image,
   TextInput,
-  ScrollView,
   TouchableOpacity,
   Dimensions,
   FlatList,
+  SafeAreaView,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import LoadingSkeleton from "../../../skeletons/Home/home";
 import { colors } from "../../../globals/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import events from "../../../models/eventsModel";
@@ -21,7 +20,6 @@ import { useNavigation } from "@react-navigation/native";
 
 const Home = () => {
   const navigation = useNavigation();
-  const [loading, setLoading] = useState(false);
   const { name, location, profileImage, email } = adminProfile;
   const [myEvents, setMyEvents] = useState([]);
 
@@ -30,44 +28,22 @@ const Home = () => {
     setMyEvents(fetchedEvents);
   }, [email]);
 
-  // console.log("events", myEvents);
-
-  const [searchInput, setSearchInput] = useState("");
-  const [isSearch, setIsSearch] = useState(false);
-  const [isToday, setIsToday] = useState(true);
-
-  if (loading) {
-    return <LoadingSkeleton />;
-  }
-
   const createEvent = () => {
     navigation.navigate("Create Event");
   };
 
-  const popularSearches = [
-    {
-      name: "Sauti Sol",
-      id: 1,
-    },
-    {
-      name: "GDG Nairobi",
-      id: 2,
-    },
-    {
-      name: "Rhumba",
-      id: 3,
-    },
-    {
-      name: "Bensoul",
-      id: 4,
-    },
-  ];
+  const renderItem = ({ item }) => <HorizontalCard event={item} />;
+
+  const onViewAll = () => {
+    navigation.navigate("Events", {
+      myEvents,
+      events,
+    });
+  };
 
   return (
-    <View style={styles.mainContainer}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 100 }}>
+    <SafeAreaView style={styles.safeAreaContainer}>
+      <View style={styles.mainContainer}>
         <View style={styles.topView}>
           <View style={styles.topLeft}>
             <Text style={styles.name}>Hey, {name}</Text>
@@ -89,96 +65,64 @@ const Home = () => {
           <Ionicons name="search" style={styles.inputIcons} />
           <TextInput
             style={styles.searchInputView}
-            value={searchInput}
             placeholder="Search event"
             placeholderTextColor={colors.grey}
-            onChangeText={(value) => {
-              setSearchInput(value);
-            }}
-            onFocus={() => setIsSearch(true)}
-            onBlur={() => setIsSearch(false)}
           />
         </View>
-        {isSearch ? (
-          <View style={styles.popularView}>
-            <Text style={styles.popularSearchTitle}>Popular searches:</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {popularSearches.map((search, index) => (
-                <View key={index} style={styles.popularPill}>
-                  <Text style={styles.popularPillText}>{search.name}</Text>
-                </View>
-              ))}
-            </ScrollView>
-          </View>
-        ) : null}
         <View style={styles.featuredEventsView}>
           <View style={styles.featuredEventsTitleView}>
             <Text style={styles.featuredEventsTitle}>My events</Text>
-            <TouchableOpacity style={styles.viewAllButton}>
+            <TouchableOpacity onPress={onViewAll} style={styles.viewAllButton}>
               <Text style={styles.viewAllText}>View All</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.tabsView}>
-            <TouchableOpacity
-              onPress={() => setIsToday(true)}
-              style={isToday ? styles.tabButtonActive : styles.tabButton}>
-              <Text
-                style={
-                  isToday ? styles.tabButtonTextActive : styles.tabButtonText
-                }>
-                Today
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setIsToday(false)}
-              style={!isToday ? styles.tabButtonActive : styles.tabButton}>
-              <Text
-                style={
-                  !isToday ? styles.tabButtonTextActive : styles.tabButtonText
-                }>
-                Tomorow
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <ScrollView horizontal>
-            {myEvents.map((item, index) => (
-              <HorizontalCard key={index} event={item} />
-            ))}
-          </ScrollView>
+          <FlatList
+            horizontal
+            data={myEvents}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id.toString()}
+            snapToInterval={Dimensions.get("window").width * 0.8}
+            decelerationRate="fast"
+            contentContainerStyle={styles.flatListContentContainer}
+            showsHorizontalScrollIndicator={false}
+          />
         </View>
         <View style={styles.otherEventsView}>
           <View style={styles.featuredEventsTitleView}>
             <Text style={styles.featuredEventsTitle}>Trending</Text>
-            <TouchableOpacity style={styles.viewAllButton}>
+            <TouchableOpacity onPress={onViewAll} style={styles.viewAllButton}>
               <Text style={styles.viewAllText}>View All</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.interestingEventsView}>
-            {events.map((item, index) => (
-              <VerticalCard key={index} event={item} />
-            ))}
-            {/* <FlatList
-            showsVerticalScrollIndicator={false}
-            data={events}
+          <FlatList
+            data={events.slice(0, 8)}
             renderItem={({ item }) => <VerticalCard event={item} />}
-            keyExtractor={(item) => item.id}
-          /> */}
-          </View>
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={styles.flatListTrendingContainer}
+            showsVerticalScrollIndicator={false}
+          />
         </View>
-      </ScrollView>
-      <TouchableOpacity onPress={createEvent} style={styles.createEventButton}>
-        <Text style={styles.createEventButtonText}>Create Event</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity
+          onPress={createEvent}
+          style={styles.createEventButton}>
+          <Text style={styles.createEventButtonText}>Create Event</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 
 export default Home;
 
 const styles = StyleSheet.create({
+  safeAreaContainer: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   mainContainer: {
     flex: 1,
     paddingHorizontal: 20,
+    paddingBottom: 80,
   },
   topView: {
     paddingTop: 50,
@@ -217,7 +161,6 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     paddingHorizontal: 15,
     paddingVertical: 10,
-    // backgroundColor: colors.line,
   },
   searchInputView: {
     flex: 1,
@@ -227,22 +170,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: colors.text,
     marginRight: 10,
-  },
-  popularView: {
-    flexDirection: "row",
-  },
-  popularSearchTitle: {
-    color: colors.text,
-  },
-  popularPill: {
-    backgroundColor: colors.line,
-    marginLeft: 5,
-    borderRadius: 10,
-  },
-  popularPillText: {
-    paddingHorizontal: 5,
-    paddingVertical: 2,
-    fontFamily: "medium",
   },
   featuredEventsView: {
     paddingVertical: 20,
@@ -261,34 +188,13 @@ const styles = StyleSheet.create({
     color: colors.green,
     fontFamily: "medium",
   },
-  tabsView: {
+  otherEventsView: {
     paddingVertical: 20,
-    flexDirection: "row",
+    paddingBottom: 100,
   },
-  tabButton: {
-    paddingVertical: 5,
-    paddingHorizontal: 50,
-  },
-  tabButtonActive: {
-    paddingVertical: 5,
-    borderBottomWidth: 2,
-    padding: 10,
-    width: Dimensions.get("window").width * 0.4,
-    alignItems: "center",
-  },
-  tabButtonText: {
-    color: colors.grey,
-    fontFamily: "thin",
-    fontSize: 16,
-  },
-  tabButtonTextActive: {
-    color: colors.text,
-    fontFamily: "black",
-    fontSize: 16,
-  },
-  featuredView: {
-    paddingVertical: 20,
-    flexDirection: "row",
+  flatListTrendingContainer: {
+    paddingTop: 10,
+    flexGrow: 1,
   },
   createEventButton: {
     position: "absolute",

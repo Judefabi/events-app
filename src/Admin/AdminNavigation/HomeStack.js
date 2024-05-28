@@ -8,6 +8,7 @@ import CreateEvent from "../Events/CreateEvent";
 import AddLocation from "../Events/AddLocation";
 import CreateTickets from "../Events/CreateTickets";
 import ConfirmDetails from "../Events/ConfirmDetails";
+import Events from "../Events/Events";
 
 const Stack = createNativeStackNavigator();
 
@@ -92,6 +93,21 @@ const HomeStack = () => {
         }}
         name="Confirm Details"
         component={ConfirmDetails}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerShadowVisible: false,
+          headerTintColor: colors.text,
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontWeight: "bold",
+            alignSelf: "center",
+          },
+          headerTransparent: true,
+        }}
+        name="Events"
+        component={Events}
       />
     </Stack.Navigator>
   );
