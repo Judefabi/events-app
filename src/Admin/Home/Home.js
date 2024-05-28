@@ -22,6 +22,16 @@ const Home = () => {
   const navigation = useNavigation();
   const { name, location, profileImage, email } = adminProfile;
   const [myEvents, setMyEvents] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+  const [isSearch, setIsSearch] = useState(false);
+
+  const onSearch = () => {
+    navigation.navigate("Events", {
+      events,
+      myEvents,
+      search: searchInput,
+    });
+  };
 
   useEffect(() => {
     const fetchedEvents = events.filter((event) => event.creator === email);
@@ -38,6 +48,7 @@ const Home = () => {
     navigation.navigate("Events", {
       myEvents,
       events,
+      search: "",
     });
   };
 
@@ -62,12 +73,18 @@ const Home = () => {
           </View>
         </View>
         <View style={styles.searchInputCover}>
-          <Ionicons name="search" style={styles.inputIcons} />
           <TextInput
             style={styles.searchInputView}
+            value={searchInput}
             placeholder="Search event"
             placeholderTextColor={colors.grey}
+            onChangeText={(value) => setSearchInput(value)}
+            onFocus={() => setIsSearch(true)}
+            onBlur={() => setIsSearch(false)}
           />
+          <TouchableOpacity onPress={onSearch} style={styles.searchButton}>
+            <Text style={styles.searchButtonText}>Search</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.featuredEventsView}>
           <View style={styles.featuredEventsTitleView}>
@@ -211,5 +228,16 @@ const styles = StyleSheet.create({
     color: colors.background,
     fontSize: 16,
     fontFamily: "bold",
+  },
+  searchButton: {
+    marginLeft: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    backgroundColor: colors.green,
+    borderRadius: 5,
+  },
+  searchButtonText: {
+    color: colors.background,
+    fontFamily: "medium",
   },
 });

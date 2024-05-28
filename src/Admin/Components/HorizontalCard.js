@@ -11,7 +11,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../../globals/colors";
 
-const HorizontalCard = ({ event }) => {
+const HorizontalCard = ({ event, feed }) => {
   const navigation = useNavigation();
 
   const { id, name, date, time, location, description, imageUrl, attendees } =
@@ -38,7 +38,12 @@ const HorizontalCard = ({ event }) => {
   };
 
   return (
-    <TouchableOpacity onPress={onDetails} style={styles.card}>
+    <TouchableOpacity
+      onPress={onDetails}
+      style={[
+        styles.card,
+        feed ? { width: Dimensions.get("window").width * 0.9 } : null,
+      ]}>
       <View style={styles.cardInnerView}>
         <Image style={styles.eventImage} source={{ uri: imageUrl }} />
       </View>

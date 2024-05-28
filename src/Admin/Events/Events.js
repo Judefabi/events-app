@@ -19,8 +19,8 @@ const Tab = createMaterialTopTabNavigator();
 
 const Events = ({ route }) => {
   const navigation = useNavigation();
-  const { myEvents, events } = route.params;
-  const [searchInput, setSearchInput] = useState("");
+  const { myEvents, events, search } = route.params;
+  const [searchInput, setSearchInput] = useState(search || "");
 
   const filteredMyEvents = myEvents?.filter((event) =>
     event?.name?.toLowerCase().includes(searchInput.toLowerCase())
