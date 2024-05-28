@@ -32,6 +32,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { lightTheme, darkTheme } from "./globals/colors";
 import { FontProvider, useFontContext } from "./contexts/fontcontext";
 import HomeStack from "./src/Admin/AdminNavigation/HomeStack";
+import SuccessModal from "./common/SuccessModal";
 
 const AppContent = () => {
   const colorScheme = useColorScheme();
@@ -46,6 +47,7 @@ const AppContent = () => {
     <NavigationContainer theme={theme}>
       <HomeStack />
       {/* <AuthStack /> */}
+      {/* <SuccessModal /> */}
     </NavigationContainer>
   );
 };

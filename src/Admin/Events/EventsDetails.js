@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   topView: {},
   topViewNameView: {
-    paddingTop: 100,
+    marginTop: 100,
     width: "50%",
   },
   name: {
@@ -153,8 +153,8 @@ const styles = StyleSheet.create({
   editView: {
     flexDirection: "row",
     width: "50%",
-    paddingTop: 100,
-    alignItems: "baseline",
+    marginTop: 100,
+    alignItems: "center",
     justifyContent: "flex-end",
   },
   editIcon: {

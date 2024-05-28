@@ -17,8 +17,10 @@ import events from "../../../models/eventsModel";
 import adminProfile from "../../../models/adminModel";
 import HorizontalCard from "../Components/HorizontalCard";
 import VerticalCard from "../Components/VerticalCard";
+import { useNavigation } from "@react-navigation/native";
 
 const Home = () => {
+  const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const { name, location, profileImage, email } = adminProfile;
   const [myEvents, setMyEvents] = useState([]);
@@ -37,6 +39,10 @@ const Home = () => {
   if (loading) {
     return <LoadingSkeleton />;
   }
+
+  const createEvent = () => {
+    navigation.navigate("Create Event");
+  };
 
   const popularSearches = [
     {
@@ -160,7 +166,7 @@ const Home = () => {
           </View>
         </View>
       </ScrollView>
-      <TouchableOpacity style={styles.createEventButton}>
+      <TouchableOpacity onPress={createEvent} style={styles.createEventButton}>
         <Text style={styles.createEventButtonText}>Create Event</Text>
       </TouchableOpacity>
     </View>

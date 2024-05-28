@@ -42,12 +42,12 @@ const HorizontalCard = ({ event }) => {
       <View style={styles.cardInnerView}>
         <Image style={styles.eventImage} source={{ uri: imageUrl }} />
         <View style={styles.imageOverlayView}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => onConfirmAttending(id)}
             style={styles.joinEventButtonView}>
             <Text style={styles.joinEventButtonText}>View Attendance</Text>
-          </TouchableOpacity>
-          <View style={styles.attendeesContainer}>
+          </TouchableOpacity> */}
+          {/* <View style={styles.attendeesContainer}>
             {attendees.slice(0, 3).map((attendee, index) => (
               <React.Fragment key={attendee.id}>
                 <Image
@@ -63,7 +63,7 @@ const HorizontalCard = ({ event }) => {
                 )}
               </React.Fragment>
             ))}
-          </View>
+          </View> */}
         </View>
       </View>
       <View style={styles.eventsDetailsView}>
