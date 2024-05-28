@@ -8,6 +8,7 @@ import Email from "../Authentication/Email";
 import Login from "../Authentication/Login";
 import HomeStack from "../User/UserNavigation/HomeStack";
 import { useTheme } from "@react-navigation/native";
+import LaunchScreen from "../Authentication/LaunchScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,18 +31,18 @@ const AuthStack = () => {
   if (isFirstLaunch === null) {
     return null; //handle error message to show if
   } else if (isFirstLaunch === true) {
-    routename = "Register";
+    routename = "Launch";
   } else {
-    routename = "Register";
+    routename = "Launch";
   }
   return (
     <Stack.Navigator
       initialRouteName={routename}
       screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Launch" component={LaunchScreen} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Forgot Password" component={Email} />
       <Stack.Screen name="Login" component={Login} />
-      {/* <Stack.Screen name="Bottom" component={BottomNavigation} /> */}
       <Stack.Screen name="Home Stack" component={HomeStack} />
     </Stack.Navigator>
   );

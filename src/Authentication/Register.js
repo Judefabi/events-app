@@ -15,9 +15,11 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import googleicon from "../../assets/googleicon.png";
 import { colors } from "../../globals/colors";
 
-const Register = () => {
+const Register = ({ route }) => {
   const navigation = useNavigation();
   const { colors } = useTheme();
+
+  console.log("Details", route.params);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
