@@ -31,7 +31,7 @@ import { StatusBar, Text, View, useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { lightTheme, darkTheme } from "./globals/colors";
 import { FontProvider, useFontContext } from "./contexts/fontcontext";
-import HomeStack from "./src/Admin/AdminNavigation/HomeStack";
+import HomeStack from "./src/User/UserNavigation/HomeStack";
 import SuccessModal from "./common/SuccessModal";
 
 const AppContent = () => {

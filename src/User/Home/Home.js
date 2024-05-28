@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,29 +8,26 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
-  FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import moment from "moment";
 import LoadingSkeleton from "../../../skeletons/Home/home";
 import userProfile from "../../../models/userModel";
 import { colors } from "../../../globals/colors";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import events from "../../../models/eventsModel";
-import HorizontalCard from "../../Components/HorizontalCard";
-import VerticalCard from "../../Components/VerticalCard";
+import fevents from "../../../models/eventsModel";
+import HorizontalCard from "../Components/HorizontalCard";
+import VerticalCard from "../Components/VerticalCard";
 import { useNavigation } from "@react-navigation/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
   const { name, location, profileImage } = userProfile;
+  const [events, setEvents] = useState(fevents);
 
   const [searchInput, setSearchInput] = useState("");
   const [isSearch, setIsSearch] = useState(false);
   const [isToday, setIsToday] = useState(true);
-
-  if (loading) {
-    return <LoadingSkeleton />;
-  }
 
   const popularSearches = [
     {
@@ -49,6 +47,52 @@ const Home = () => {
       id: 4,
     },
   ];
+
+  if (loading) {
+    return <LoadingSkeleton />;
+  }
+
+  const NoEventsHorizontalCard = () => (
+    <View style={[styles.horizontalCard, styles.placeholderCard]}>
+      <Text style={styles.placeholderText}>No events available.</Text>
+    </View>
+  );
+
+  const NoEventsVerticalCard = () => (
+    <View style={[styles.verticalCard, styles.placeholderCard]}>
+      <Text style={styles.placeholderText}>No upcoming events.</Text>
+    </View>
+  );
+
+  // Filter events for today and tomorrow
+  const todayEvents = events.filter((item) =>
+    moment(item.date).isSame(moment(), "day")
+  );
+  const tomorrowEvents = events.filter((item) =>
+    moment(item.date).isSame(moment().add(1, "day"), "day")
+  );
+
+  const onViewAll = () => {
+    navigation.navigate("Events", {
+      events,
+      featuredEvents: events,
+      search: "",
+    });
+  };
+
+  const onSearch = () => {
+    navigation.navigate("Events", {
+      events,
+      featuredEvents: events,
+      search: searchInput,
+    });
+  };
+
+  const handlePopularSearchPress = (popular) => {
+    console.log("popular", popular);
+    // setSearchInput(name);
+    // setIsSearch(false);
+  };
 
   return (
     <ScrollView style={styles.mainContainer}>
@@ -70,27 +114,30 @@ const Home = () => {
         </View>
       </View>
       <View style={styles.searchInputCover}>
-        <Ionicons name="search" style={styles.inputIcons} />
         <TextInput
           style={styles.searchInputView}
           value={searchInput}
           placeholder="Search event"
           placeholderTextColor={colors.grey}
-          onChangeText={(value) => {
-            setSearchInput(value);
-          }}
+          onChangeText={(value) => setSearchInput(value)}
           onFocus={() => setIsSearch(true)}
           onBlur={() => setIsSearch(false)}
         />
+        <TouchableOpacity onPress={onSearch} style={styles.searchButton}>
+          <Text style={styles.searchButtonText}>Search</Text>
+        </TouchableOpacity>
       </View>
       {isSearch ? (
         <View style={styles.popularView}>
           <Text style={styles.popularSearchTitle}>Popular searches:</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {popularSearches.map((search, index) => (
-              <View key={index} style={styles.popularPill}>
-                <Text style={styles.popularPillText}>{search.name}</Text>
-              </View>
+            {popularSearches.map((popular, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.popularPill}
+                onPress={() => handlePopularSearchPress(popular)}>
+                <Text style={styles.popularPillText}>{popular.name}</Text>
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
@@ -98,7 +145,7 @@ const Home = () => {
       <View style={styles.featuredEventsView}>
         <View style={styles.featuredEventsTitleView}>
           <Text style={styles.featuredEventsTitle}>Upcoming events</Text>
-          <TouchableOpacity style={styles.viewAllButton}>
+          <TouchableOpacity onPress={onViewAll} style={styles.viewAllButton}>
             <Text style={styles.viewAllText}>View All</Text>
           </TouchableOpacity>
         </View>
@@ -120,35 +167,45 @@ const Home = () => {
               style={
                 !isToday ? styles.tabButtonTextActive : styles.tabButtonText
               }>
-              Tomorow
+              Tomorrow
             </Text>
           </TouchableOpacity>
         </View>
         <ScrollView horizontal>
-          {events.map((item, index) => (
-            <HorizontalCard key={index} event={item} />
-          ))}
+          {isToday ? (
+            todayEvents?.length > 0 ? (
+              todayEvents?.map((item, index) => (
+                <HorizontalCard key={index} event={item} attending={false} />
+              ))
+            ) : (
+              <NoEventsHorizontalCard />
+            )
+          ) : tomorrowEvents?.length > 0 ? (
+            tomorrowEvents?.map((item, index) => (
+              <HorizontalCard key={index} event={item} />
+            ))
+          ) : (
+            <NoEventsHorizontalCard />
+          )}
         </ScrollView>
       </View>
       <View style={styles.otherEventsView}>
         <View style={styles.featuredEventsTitleView}>
           <Text style={styles.featuredEventsTitle}>
-            You might be interested{" "}
+            You might be interested
           </Text>
-          <TouchableOpacity style={styles.viewAllButton}>
+          <TouchableOpacity onPress={onViewAll} style={styles.viewAllButton}>
             <Text style={styles.viewAllText}>View All</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.interestingEventsView}>
-          {events.map((item, index) => (
-            <VerticalCard key={index} event={item} />
-          ))}
-          {/* <FlatList
-            showsVerticalScrollIndicator={false}
-            data={events}
-            renderItem={({ item }) => <VerticalCard event={item} />}
-            keyExtractor={(item) => item.id}
-          /> */}
+          {events?.length > 0 ? (
+            events
+              ?.slice(0, 3)
+              .map((item, index) => <VerticalCard key={index} event={item} />)
+          ) : (
+            <NoEventsVerticalCard />
+          )}
         </View>
       </View>
     </ScrollView>
@@ -177,9 +234,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  locationIcon: {
-    color: colors.grey,
-  },
   location: {
     color: colors.text,
     fontFamily: "thin",
@@ -199,16 +253,21 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     paddingHorizontal: 15,
     paddingVertical: 10,
-    // backgroundColor: colors.line,
   },
   searchInputView: {
     flex: 1,
     fontSize: 16,
   },
-  inputIcons: {
-    fontSize: 25,
-    color: colors.text,
-    marginRight: 10,
+  searchButton: {
+    marginLeft: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    backgroundColor: colors.green,
+    borderRadius: 5,
+  },
+  searchButtonText: {
+    color: colors.background,
+    fontFamily: "medium",
   },
   popularView: {
     flexDirection: "row",
@@ -220,10 +279,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.line,
     marginLeft: 5,
     borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
   popularPillText: {
-    paddingHorizontal: 5,
-    paddingVertical: 2,
     fontFamily: "medium",
   },
   featuredEventsView: {
@@ -244,32 +303,47 @@ const styles = StyleSheet.create({
     fontFamily: "medium",
   },
   tabsView: {
-    paddingVertical: 20,
     flexDirection: "row",
+    justifyContent: "space-around",
+    marginBottom: 20,
   },
   tabButton: {
-    paddingVertical: 5,
-    paddingHorizontal: 50,
+    flex: 1,
+    alignItems: "center",
+    paddingVertical: 10,
   },
   tabButtonActive: {
-    paddingVertical: 5,
-    borderBottomWidth: 2,
-    padding: 10,
-    width: Dimensions.get("window").width * 0.4,
+    flex: 1,
     alignItems: "center",
+    paddingVertical: 10,
+    borderBottomWidth: 2,
+    borderBottomColor: colors.green,
   },
   tabButtonText: {
     color: colors.grey,
-    fontFamily: "thin",
-    fontSize: 16,
   },
   tabButtonTextActive: {
-    color: colors.text,
-    fontFamily: "black",
-    fontSize: 16,
+    color: colors.green,
+    fontFamily: "bold",
   },
-  featuredView: {
+  horizontalCard: {
+    marginRight: 20,
+  },
+  placeholderCard: {
+    backgroundColor: colors.line,
+    padding: 20,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  placeholderText: {
+    color: colors.text,
+  },
+  otherEventsView: {
     paddingVertical: 20,
-    flexDirection: "row",
+  },
+  interestingEventsView: {},
+  verticalCard: {
+    marginBottom: 20,
   },
 });

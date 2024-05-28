@@ -1,8 +1,8 @@
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { colors } from "../../globals/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import { colors } from "../../../globals/colors";
 
 const VerticalCard = ({ event }) => {
   const navigation = useNavigation();
@@ -48,7 +48,7 @@ const VerticalCard = ({ event }) => {
           </View>
         </View>
         <View style={styles.attendeesContainer}>
-          {attendees.slice(0, 2).map((attendee, index) => (
+          {attendees?.slice(0, 2).map((attendee, index) => (
             <React.Fragment key={attendee.id}>
               <Image
                 source={{ uri: attendee.image }}

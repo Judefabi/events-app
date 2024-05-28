@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { colors } from "../../globals/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import { colors } from "../../../globals/colors";
 
-const HorizontalCard = ({ event }) => {
+const HorizontalCard = ({ event, attending }) => {
   const navigation = useNavigation();
 
   const { id, name, date, time, location, description, imageUrl, attendees } =
@@ -30,6 +30,7 @@ const HorizontalCard = ({ event }) => {
   const onDetails = () => {
     navigation.navigate("Event Details", {
       event: event,
+      attending,
     });
   };
 
@@ -38,17 +39,39 @@ const HorizontalCard = ({ event }) => {
   };
 
   return (
-    <TouchableOpacity onPress={onDetails} style={styles.card}>
+    <TouchableOpacity
+      onPress={onDetails}
+      style={[
+        styles.card,
+        attending ? { width: Dimensions.get("window").width * 0.9 } : null,
+      ]}>
       <View style={styles.cardInnerView}>
         <Image style={styles.eventImage} source={{ uri: imageUrl }} />
         <View style={styles.imageOverlayView}>
-          <TouchableOpacity
-            onPress={() => onConfirmAttending(id)}
-            style={styles.joinEventButtonView}>
-            <Text style={styles.joinEventButtonText}>Confirm Attending</Text>
-          </TouchableOpacity>
+          {attending ? (
+            <TouchableOpacity
+              onPress={() => onConfirmAttending(id)}
+              style={[
+                styles.joinEventButtonView,
+                { backgroundColor: colors.green },
+              ]}>
+              <Text
+                style={[
+                  styles.joinEventButtonText,
+                  { color: colors.background },
+                ]}>
+                Attending
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => onConfirmAttending(id)}
+              style={styles.joinEventButtonView}>
+              <Text style={styles.joinEventButtonText}>Confirm Attending</Text>
+            </TouchableOpacity>
+          )}
           <View style={styles.attendeesContainer}>
-            {attendees.slice(0, 3).map((attendee, index) => (
+            {attendees?.slice(0, 3).map((attendee, index) => (
               <React.Fragment key={attendee.id}>
                 <Image
                   source={{ uri: attendee.image }}

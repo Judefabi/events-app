@@ -1,11 +1,12 @@
-const events = [
+const fevents = [
   {
     id: 1,
     name: "Concert in the Park",
-    date: "2023-05-23",
+    date: "2024-05-28",
     time: "18:00",
     creator: "judefabiano99@gmail.com",
     location: "Central Park, New York",
+    coordinates: { lat: 40.785091, lng: -73.968285 },
     description:
       "Join us for an evening of live music in the park. Experience the enchanting melodies of local bands while enjoying the serene atmosphere of Central Park.",
     imageUrl: "https://source.unsplash.com/random/400x300?concert",
@@ -55,10 +56,11 @@ const events = [
   {
     id: 2,
     name: "Art Exhibition",
-    date: "2023-05-24",
+    date: "2024-05-28",
     time: "10:00",
     creator: "judefabiano99@gmail.com",
     location: "Modern Art Museum, San Francisco",
+    coordinates: { lat: 37.785834, lng: -122.400621 },
     description:
       "Immerse yourself in a diverse collection of contemporary artworks by emerging and established local artists. This exhibition showcases creativity in various forms, from paintings to sculptures.",
     imageUrl: "https://source.unsplash.com/random/400x300?art",
@@ -98,10 +100,11 @@ const events = [
   {
     id: 3,
     name: "Food Festival",
-    date: "2023-05-25",
+    date: "2024-05-29",
     time: "12:00",
     creator: "judefabiano99@gmail.com",
     location: "Downtown, Los Angeles",
+    coordinates: { lat: 34.040713, lng: -118.246769 },
     description:
       "Embark on a culinary journey around the world at the Downtown Food Festival. Indulge in a wide array of dishes, from street food delights to gourmet creations, all in one vibrant location.",
     imageUrl: "https://source.unsplash.com/random/400x300?food",
@@ -146,10 +149,11 @@ const events = [
   {
     id: 4,
     name: "Tech Conference",
-    date: "2023-05-26",
+    date: "2024-05-28",
     time: "09:00",
     creator: "fabiano@gmail.com",
     location: "Convention Center, Seattle",
+    coordinates: { lat: 47.611436, lng: -122.330456 },
     description:
       "Connect with industry leaders and innovators at the Tech Conference in Seattle. Explore the latest trends in technology, attend insightful sessions, and network with like-minded professionals.",
     imageUrl: "https://source.unsplash.com/random/400x300?tech",
@@ -194,10 +198,11 @@ const events = [
   {
     id: 5,
     name: "Yoga Workshop",
-    date: "2023-05-27",
+    date: "2024-05-30",
     time: "08:00",
     creator: "fabiano@gmail.com",
     location: "Beachfront, Miami",
+    coordinates: { lat: 25.790654, lng: -80.130045 },
     description:
       "Refresh your mind and body with a rejuvenating yoga session by the tranquil sea. Join us for a morning of relaxation and wellness at the Beachfront Yoga Workshop.",
     imageUrl: "https://source.unsplash.com/random/400x300?yoga",
@@ -242,10 +247,11 @@ const events = [
   {
     id: 6,
     name: "Book Fair",
-    date: "2023-05-28",
+    date: "2024-05-30",
     time: "11:00",
     creator: "fabiano@gmail.com",
     location: "City Library, Boston",
+    coordinates: { lat: 42.360082, lng: -71.05888 },
     description:
       "Discover literary treasures and meet your favorite authors at the City Library Book Fair. Explore a wide selection of books, from bestsellers to hidden gems.",
     imageUrl: "https://source.unsplash.com/random/400x300?books",
@@ -290,9 +296,10 @@ const events = [
   {
     id: 7,
     name: "Charity Run",
-    date: "2023-05-29",
+    date: "2024-05-29",
     time: "07:00",
     location: "Riverside Park, Chicago",
+    coordinates: { lat: 42.360082, lng: -71.05888 },
     creator: "fabianojude@gmail.com",
     description:
       "Run for a cause at the Riverside Park Charity Run. Lace up your shoes and join us in raising funds for local charities and making a positive impact in our community.",
@@ -338,7 +345,7 @@ const events = [
   {
     id: 8,
     name: "Film Screening",
-    date: "2023-05-30",
+    date: "2024-05-30",
     time: "19:00",
     location: "Outdoor Cinema, Austin",
     creator: "fabianosmith@gmail.com",
@@ -386,7 +393,7 @@ const events = [
   {
     id: 9,
     name: "Farmers Market",
-    date: "2023-05-31",
+    date: "2024-05-31",
     time: "09:00",
     creator: "fabiano@gmail.com",
     location: "Town Square, Portland",
@@ -434,9 +441,10 @@ const events = [
   {
     id: 10,
     name: "Theater Play",
-    date: "2023-06-01",
+    date: "2024-06-01",
     time: "20:00",
     location: "Grand Theater, Atlanta",
+    coordinates: { lat: 42.360082, lng: -71.05888 },
     creator: "fabiano@gmail.com",
     description:
       "Immerse yourself in the world of theater with a captivating live performance at the Grand Theater. Experience the magic of storytelling brought to life on stage.",
@@ -481,4 +489,4 @@ const events = [
   },
 ];
 
-export default events;
+export default fevents;

@@ -28,6 +28,7 @@ const EventsDetails = ({ route }) => {
     tickets,
     ticketsSold,
     ticketRanges,
+    attending,
   } = route?.params?.event;
 
   const formatAttendeeCount = (count) => {
@@ -111,9 +112,19 @@ const EventsDetails = ({ route }) => {
             </Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.ticketsButton}>
-          <Text style={styles.ticketsButtonText}>Get Ticket</Text>
-        </TouchableOpacity>
+        {attending ? (
+          <TouchableOpacity style={styles.ticketsButton}>
+            <Text style={styles.ticketsButtonText}>Get Ticket</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={[styles.ticketsButton, { backgroundColor: colors.green }]}>
+            <Text
+              style={[styles.ticketsButtonText, { color: colors.background }]}>
+              View Your Ticket
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
