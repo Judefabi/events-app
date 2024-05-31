@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../globals/colors";
-import * as Location from "expo-location";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LaunchScreen = () => {
   const navigation = useNavigation();
@@ -26,49 +26,14 @@ const LaunchScreen = () => {
     }).start();
   }, [fadeAnim]);
 
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
-
-  console.log("location", location);
-
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    })();
-  }, []);
-
-  let text = "Waiting..";
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
-
-  const handleCreateEventsPress = () => {
-    navigation.navigate("Register", {
-      type: "creator",
-      userLocation: {
-        lat: location?.coords?.latitude,
-        lng: location?.coords?.longitude,
-      },
-    });
+  const handleCreateEventsPress = async () => {
+    await AsyncStorage.setItem("type", "creator");
+    navigation.navigate("Register");
   };
 
-  const handleAttendEventsPress = () => {
-    navigation.navigate("Register", {
-      type: "attendee",
-      userLocation: {
-        lat: location?.coords?.latitude,
-        lng: location?.coords?.longitude,
-      },
-    });
+  const handleAttendEventsPress = async () => {
+    await AsyncStorage.setItem("type", "attendee");
+    navigation.navigate("Register");
   };
 
   return (

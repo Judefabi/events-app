@@ -1,44 +1,65 @@
-import { StyleSheet } from "react-native";
-import React, { useEffect } from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { BottomNavigation } from "../User/UserNavigation/BottomNavigation";
+import { useAuth } from "../../contexts/authContext";
+import LaunchScreen from "../Authentication/LaunchScreen";
 import Register from "../Authentication/Register";
 import Email from "../Authentication/Email";
 import Login from "../Authentication/Login";
-import { useTheme } from "@react-navigation/native";
-import LaunchScreen from "../Authentication/LaunchScreen";
 import UserHomeStack from "../User/UserNavigation/UserHomeStack";
 import AdminHomeStack from "../Admin/AdminNavigation/AdminHomeStack";
+import { useNavigation } from "@react-navigation/native";
+import LoadingIndicator from "../../common/LoadingIndicator";
 
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => {
-  const { colors } = useTheme();
-  const [isFirstLaunch, setIsFirstLaunch] = React.useState(null);
+  const navigation = useNavigation();
+  const [isFirstLaunch, setIsFirstLaunch] = useState(null);
+  const { isAuthenticated, type, loading } = useAuth(); // Assume loading is a state in your auth context
 
-  let routename;
   useEffect(() => {
-    AsyncStorage.getItem("alreadyLaunched").then((value) => {
-      if (value == null) {
-        AsyncStorage.setItem("alreadyLaunched", "true");
-        setIsFirstLaunch(true);
-      } else {
-        setIsFirstLaunch(false);
+    const checkFirstLaunch = async () => {
+      try {
+        const value = await AsyncStorage.getItem("alreadyLaunched");
+        setIsFirstLaunch(value === null);
+      } catch (error) {
+        console.error(
+          "Error retrieving isFirstLaunch from AsyncStorage:",
+          error
+        );
       }
-    });
+    };
+
+    checkFirstLaunch();
   }, []);
 
-  if (isFirstLaunch === null) {
-    return null; //handle error message to show if
-  } else if (isFirstLaunch === true) {
-    routename = "Launch";
-  } else {
-    routename = "Launch";
+  useEffect(() => {
+    console.log(isAuthenticated);
+    if (isAuthenticated === undefined) return;
+
+    if (isFirstLaunch) {
+      navigation.navigate("Launch");
+    } else if (isAuthenticated) {
+      if (type === "creator") {
+        navigation.navigate("Admin Stack");
+      } else if (type === "attendee") {
+        navigation.navigate("User Stack");
+      }
+    } else {
+      navigation.navigate("Login");
+    }
+  }, [isFirstLaunch, isAuthenticated, type]);
+
+  if (isAuthenticated === undefined) {
+    return <LoadingIndicator />;
   }
+
+  // console.log(routename);
   return (
     <Stack.Navigator
-      initialRouteName={routename}
+      initialRouteName={"Launch"}
       screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Launch" component={LaunchScreen} />
       <Stack.Screen name="Register" component={Register} />

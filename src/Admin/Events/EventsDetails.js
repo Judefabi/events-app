@@ -134,10 +134,11 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     paddingHorizontal: 20,
+    backgroundColor: colors.background,
   },
   topView: {},
   topViewNameView: {
-    marginTop: 100,
+    paddingTop: 100,
     width: "50%",
   },
   name: {

@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     paddingHorizontal: 20,
+    backgroundColor: colors.background,
     paddingBottom: 80,
   },
   topView: {

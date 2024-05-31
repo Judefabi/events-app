@@ -1,44 +1,16 @@
-// import { StatusBar, View, useColorScheme } from "react-native";
-// import React from "react";
-// import { NavigationContainer } from "@react-navigation/native";
-// import { lightTheme, darkTheme } from "./globals/colors";
-// import AuthStack from "./src/Navigation/Authstack";
-
-// const App = () => {
-//   const colorScheme = useColorScheme();
-
-//   const theme = colorScheme === "dark" ? darkTheme : lightTheme;
-
-//   return (
-//     <View>
-//       <StatusBar
-//         barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
-//         hidden={false}
-//         backgroundColor={theme.colors.line}
-//         translucent={true}
-//       />
-//       <NavigationContainer theme={theme}>
-//         {/* <BottomNavigation /> */}
-//         <AuthStack />
-//       </NavigationContainer>
-//     </View>
-//   );
-// };
-
-// export default App;
 import React from "react";
 import { StatusBar, Text, View, useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { lightTheme, darkTheme } from "./globals/colors";
+import { lightTheme, darkTheme, colors } from "./globals/colors";
 import { FontProvider, useFontContext } from "./contexts/fontcontext";
 import HomeStack from "./src/User/UserNavigation/UserHomeStack";
 import SuccessModal from "./common/SuccessModal";
 import LaunchScreen from "./src/Authentication/LaunchScreen";
 import AuthStack from "./src/MainNavigation/Authstack";
+import { AuthProvider } from "./contexts/authContext";
+import { LocationProvider } from "./contexts/locationContext";
 
 const AppContent = () => {
-  const colorScheme = useColorScheme();
-  const theme = colorScheme === "dark" ? darkTheme : lightTheme;
   const { fontsLoaded, fontError } = useFontContext();
 
   if (!fontsLoaded && !fontError) {
@@ -46,7 +18,7 @@ const AppContent = () => {
   }
 
   return (
-    <NavigationContainer theme={theme}>
+    <NavigationContainer>
       {/* <HomeStack /> */}
       <AuthStack />
       {/* <SuccessModal /> */}
@@ -57,20 +29,25 @@ const AppContent = () => {
 
 const App = () => {
   const colorScheme = useColorScheme();
-  const theme = colorScheme === "dark" ? darkTheme : lightTheme;
 
   return (
-    <FontProvider>
-      <View style={{ flex: 1 }}>
-        <StatusBar
-          barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
-          hidden={false}
-          backgroundColor={theme.colors.line}
-          translucent={true}
-        />
-        <AppContent />
-      </View>
-    </FontProvider>
+    <LocationProvider>
+      <AuthProvider>
+        <FontProvider>
+          <View style={{ flex: 1, backgroundColor: colors.background }}>
+            <StatusBar
+              barStyle={
+                colorScheme === "dark" ? "light-content" : "dark-content"
+              }
+              hidden={false}
+              backgroundColor={colors.line}
+              translucent={true}
+            />
+            <AppContent />
+          </View>
+        </FontProvider>
+      </AuthProvider>
+    </LocationProvider>
   );
 };
 

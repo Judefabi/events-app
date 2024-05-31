@@ -194,9 +194,10 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     paddingHorizontal: 20,
+    backgroundColor: colors.background,
   },
   uploadPictureButton: {
-    marginTop: 100,
+    paddingTop: 100,
     height: Dimensions.get("window").height * 0.25,
     backgroundColor: colors.line,
     alignItems: "center",

@@ -6,6 +6,7 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -13,12 +14,21 @@ import HorizontalCard from "../Components/HorizontalCard";
 import userProfile from "../../../models/userModel";
 import events from "../../../models/eventsModel"; // Assuming events model has confirmed events
 import { colors } from "../../../globals/colors";
+import { useAuth } from "../../../contexts/authContext";
 
 const Tab = createMaterialTopTabNavigator();
 
 const Profile = () => {
   const { name, email, profileImage, bio, location, interests, socialLinks } =
     userProfile;
+  const { logout } = useAuth();
+
+  const onLogOut = async () => {
+    const response = await logout();
+    if (!response.success) {
+      Alert.alert("Logout Failed", response.msg);
+    }
+  };
 
   return (
     <ScrollView style={styles.mainContainer}>
@@ -46,6 +56,11 @@ const Profile = () => {
             <Ionicons name="logo-instagram" size={24} color={colors.text} />
           </TouchableOpacity>
         </View>
+        <View style={{ paddingVertical: 20 }}>
+          <TouchableOpacity onPress={onLogOut}>
+            <Text>Log Out</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );
@@ -56,7 +71,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     backgroundColor: colors.background,
-    marginTop: 100,
+    paddingTop: 100,
   },
   profileHeader: {
     alignItems: "center",

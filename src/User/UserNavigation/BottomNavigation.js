@@ -2,13 +2,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FeedStack from "./FeedStack";
 import ProfileStack from "./ProfileStack";
-import { useTheme } from "@react-navigation/native";
 import Home from "../Home/Home";
+import { colors } from "../../../globals/colors";
 
 const Tab = createBottomTabNavigator();
 
 export function BottomNavigation() {
-  const { colors } = useTheme();
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({

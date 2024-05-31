@@ -46,6 +46,7 @@ const Profile = () => {
             <Ionicons name="logo-instagram" size={24} color={colors.text} />
           </TouchableOpacity>
         </View>
+
       </View>
     </ScrollView>
   );
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     backgroundColor: colors.background,
-    marginTop: 100,
+    paddingTop: 100,
   },
   profileHeader: {
     alignItems: "center",

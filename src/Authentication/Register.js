@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,45 +9,123 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Image,
+  Alert,
 } from "react-native";
-import React, { useReducer, useState } from "react";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import googleicon from "../../assets/googleicon.png";
 import { colors } from "../../globals/colors";
+import { useAuth } from "../../contexts/authContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Register = ({ route }) => {
   const navigation = useNavigation();
-  const { colors } = useTheme();
+  const { register, loading } = useAuth();
 
-  const userData = route.params;
-  console.log("Details", userData);
-
+  const [type, setType] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [isName, setIsName] = useState(false);
-  const [isEmail, setIsEmail] = useState(false);
-  const [isPhone, setIsPhone] = useState(false);
-  const [isPassword, setIsPassword] = useState(false);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isConfirmPassword, setIsConfirmPassword] = useState(false);
-  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
-    useState(false);
+  const [nameError, setNameError] = useState(null);
+  const [emailError, setEmailError] = useState(null);
+  const [phoneError, setPhoneError] = useState(null);
+  const [passwordError, setPasswordError] = useState(null);
+  const [confirmPasswordError, setConfirmPasswordError] = useState(null);
 
-  const [loading, setLoading] = useState(false);
-
-  const onNext = () => {
-    navigation.navigate("Login", {
-      userData,
+  useEffect(() => {
+    AsyncStorage.getItem("type").then((value) => {
+      if (value == null) {
+        setType("attendee");
+      } else {
+        setType(value);
+      }
     });
+  }, []);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const validateFields = () => {
+    let isValid = true;
+
+    if (!name.trim()) {
+      setNameError("Name is required");
+      isValid = false;
+    } else {
+      setNameError(null);
+    }
+
+    if (!email.trim()) {
+      setEmailError("Email is required");
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      setEmailError("Invalid email address");
+      isValid = false;
+    } else {
+      setEmailError(null);
+    }
+
+    if (!phone.trim()) {
+      setPhoneError("Phone number is required");
+      isValid = false;
+    } else {
+      setPhoneError(null);
+    }
+
+    if (!password.trim()) {
+      setPasswordError("Password is required");
+      isValid = false;
+    } else if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters long");
+      isValid = false;
+    } else {
+      setPasswordError(null);
+    }
+
+    if (!confirmPassword.trim()) {
+      setConfirmPasswordError("Confirm Password is required");
+      isValid = false;
+    } else if (confirmPassword !== password) {
+      setConfirmPasswordError("Passwords do not match");
+      isValid = false;
+    } else {
+      setConfirmPasswordError(null);
+    }
+
+    return isValid;
+  };
+
+  const handleRegister = async () => {
+    if (!validateFields()) {
+      return;
+    }
+
+    try {
+      let response = await register(email, password, name, phone, type);
+      console.log(response);
+      if (!response.success) {
+        Alert.alert("Sign Up", response.msg);
+      }
+      // navigation.navigate("Login", { userData: route.params });
+    } catch (error) {
+      console.log("Registration error: ", error);
+    }
+  };
+
+  const onLogin = () => {
+    navigation.navigate("Login");
   };
 
   return (
     <ScrollView
-      style={[styles.mainContainer, { backgroundColor: colors.background }]}>
+      style={[styles.mainContainer, { backgroundColor: colors.background }]}
+      contentContainerStyle={styles.scrollContent}
+      keyboardShouldPersistTaps="handled">
       <View style={styles.topView}>
         <Text style={[styles.pageTitle, { color: colors.text }]}>
           Register.
@@ -56,130 +135,124 @@ const Register = ({ route }) => {
         </Text>
       </View>
 
-      <View style={[styles.inputCover, isName && styles.inputCoverActive]}>
+      <View style={[styles.inputCover, nameError && styles.inputCoverError]}>
         <Ionicons name="person" style={styles.inputIcon} />
         <TextInput
-          style={[
-            styles.inputView,
-            { borderBottomColor: colors.grey, color: colors.text },
-          ]}
+          style={[styles.inputView, { color: colors.text }]}
           value={name}
           placeholder="Name"
           placeholderTextColor={colors.border}
           onChangeText={(value) => setName(value)}
-          onFocus={() => setIsName(true)}
-          onBlur={() => setIsName(false)}
         />
       </View>
+      {nameError && <Text style={styles.errorText}>{nameError}</Text>}
 
-      <View style={[styles.inputCover, isEmail && styles.inputCoverActive]}>
+      <View style={[styles.inputCover, emailError && styles.inputCoverError]}>
         <Ionicons name="mail" style={styles.inputIcon} />
         <TextInput
-          style={[
-            styles.inputView,
-            { borderBottomColor: colors.grey, color: colors.text },
-          ]}
+          style={[styles.inputView, { color: colors.text }]}
           value={email}
           placeholder="Email"
           placeholderTextColor={colors.border}
           onChangeText={(value) => setEmail(value)}
-          onFocus={() => setIsEmail(true)}
-          onBlur={() => setIsEmail(false)}
         />
       </View>
+      {emailError && <Text style={styles.errorText}>{emailError}</Text>}
 
-      <View style={[styles.inputCover, isPhone && styles.inputCoverActive]}>
+      <View style={[styles.inputCover, phoneError && styles.inputCoverError]}>
         <Ionicons name="call" style={styles.inputIcon} />
         <TextInput
-          style={[
-            styles.inputView,
-            { borderBottomColor: colors.grey, color: colors.text },
-          ]}
+          style={[styles.inputView, { color: colors.text }]}
           value={phone}
           placeholder="Phone Number"
           placeholderTextColor={colors.grey}
           onChangeText={(value) => setPhone(value)}
-          onFocus={() => setIsPhone(true)}
-          onBlur={() => setIsPhone(false)}
         />
       </View>
+      {phoneError && <Text style={styles.errorText}>{phoneError}</Text>}
 
-      <View style={[styles.inputCover, isPassword && styles.inputCoverActive]}>
+      <View
+        style={[styles.inputCover, passwordError && styles.inputCoverError]}>
         <Ionicons name="lock-closed" style={styles.inputIcon} />
         <TextInput
-          style={[
-            styles.inputView,
-            { borderBottomColor: colors.grey, color: colors.card },
-          ]}
-          secureTextEntry={!isPasswordVisible}
+          style={[styles.inputView, { color: colors.card }]}
+          secureTextEntry={!showPassword}
           value={password}
           placeholder="Password"
           placeholderTextColor={colors.grey}
           onChangeText={(value) => setPassword(value)}
-          onFocus={() => setIsPassword(true)}
-          onBlur={() => setIsPassword(false)}
         />
         <TouchableOpacity
-          onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+          onPress={togglePasswordVisibility}
+          style={styles.iconButton}>
           <Ionicons
-            name={isPasswordVisible ? "eye-off" : "eye"}
-            style={styles.inputIcon}
+            name={showPassword ? "eye-off" : "eye"}
+            size={20}
+            color={colors.text}
           />
         </TouchableOpacity>
       </View>
-      <View style={[styles.inputCover, isPassword && styles.inputCoverActive]}>
+      {passwordError && <Text style={styles.errorText}>{passwordError}</Text>}
+
+      <View
+        style={[
+          styles.inputCover,
+          confirmPasswordError && styles.inputCoverError,
+        ]}>
         <Ionicons name="lock-closed" style={styles.inputIcon} />
         <TextInput
-          style={[
-            styles.inputView,
-            { borderBottomColor: colors.grey, color: colors.card },
-          ]}
-          secureTextEntry={!isPasswordVisible}
-          value={password}
+          style={[styles.inputView, { color: colors.card }]}
+          secureTextEntry={!showPassword}
+          value={confirmPassword}
           placeholder="Confirm Password"
           placeholderTextColor={colors.grey}
           onChangeText={(value) => setConfirmPassword(value)}
-          onFocus={() => setIsConfirmPassword(true)}
-          onBlur={() => setIsConfirmPassword(false)}
         />
         <TouchableOpacity
-          onPress={() =>
-            setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
-          }>
+          onPress={togglePasswordVisibility}
+          style={styles.iconButton}>
           <Ionicons
-            name={isPasswordVisible ? "eye-off" : "eye"}
-            style={styles.inputIcon}
+            name={showPassword ? "eye-off" : "eye"}
+            size={20}
+            color={colors.text}
           />
         </TouchableOpacity>
       </View>
-      <View style={styles.navigationView}>
-        <TouchableOpacity
-          onPress={onNext}
-          style={[styles.button, { backgroundColor: colors.button }]}>
-          {loading && <ActivityIndicator color={colors.background} />}
+      {confirmPasswordError && (
+        <Text style={styles.errorText}>{confirmPasswordError}</Text>
+      )}
+
+      <TouchableOpacity
+        onPress={handleRegister}
+        style={[styles.button, { backgroundColor: colors.button }]}
+        disabled={loading}>
+        {loading ? (
+          <ActivityIndicator color={colors.background} />
+        ) : (
           <Text style={[styles.buttonText, { color: colors.buttonText }]}>
             Register
           </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Login")}
-          style={styles.loginButton}>
-          <Text style={[styles.loginButtonText, { color: colors.text }]}>
-            Already have an account?<Text style={styles.loginText}> Login</Text>
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.orView}>
-          <View style={styles.sideLines} />
-          <Text style={styles.orText}>OR</Text>
-          <View style={styles.sideLines} />
-        </View>
-        <TouchableOpacity style={styles.googleButton}>
-          <Image style={styles.googleImage} source={googleicon} />
-          <Text style={[styles.buttonText, styles.googleButtonText]}>
-            Continue with Google
-          </Text>
-        </TouchableOpacity>
+        )}
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={onLogin} style={styles.loginButton}>
+        <Text style={[styles.loginButtonText, { color: colors.text }]}>
+          Already have an account? <Text style={styles.loginText}>Login</Text>
+        </Text>
+      </TouchableOpacity>
+
+      <View style={styles.orView}>
+        <View style={styles.sideLines} />
+        <Text style={styles.orText}>OR</Text>
+        <View style={styles.sideLines} />
       </View>
+
+      <TouchableOpacity style={styles.googleButton}>
+        <Image style={styles.googleImage} source={googleicon} />
+        <Text style={[styles.buttonText, styles.googleButtonText]}>
+          Continue with Google
+        </Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -215,6 +288,9 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 15,
     paddingVertical: 10,
+  },
+  inputCoverError: {
+    borderColor: colors.red,
   },
   inputCoverActive: {
     borderBottomColor: colors.text,
@@ -292,5 +368,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "medium",
     color: colors.text,
+  },
+  errorText: {
+    color: colors.red,
+    fontSize: 8,
+    paddingHorizontal: 20,
   },
 });

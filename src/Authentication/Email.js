@@ -9,16 +9,13 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { fonts } from "../../globals/fonts";
-import { useNavigation, useTheme } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { colors } from "../../globals/colors";
 
 const Email = () => {
   const navigation = useNavigation();
-  const { colors } = useTheme();
 
   const [email, setEmail] = useState("");
-
   const [isEmail, setIsEmail] = useState(false);
 
   const onConfirm = () => {

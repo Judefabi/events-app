@@ -108,7 +108,8 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     paddingHorizontal: 20,
-    marginTop: 90,
+    backgroundColor: colors.background,
+    paddingTop: 90,
   },
   ticketInputView: {
     flexDirection: "row",

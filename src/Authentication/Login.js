@@ -1,3 +1,8 @@
+import React, { useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import googleicon from "../../assets/googleicon.png";
+import { colors } from "../../globals/colors";
 import {
   StyleSheet,
   Text,
@@ -7,39 +12,78 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
-import { useNavigation, useTheme } from "@react-navigation/native";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import googleicon from "../../assets/googleicon.png";
-import { colors } from "../../globals/colors";
+import { useAuth } from "../../contexts/authContext";
+import { useLocation } from "../../contexts/locationContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Login = ({ route }) => {
   const navigation = useNavigation();
-  const { colors } = useTheme();
-  const { type, userLocation } = route.params.userData;
+
+  const { login, loading } = useAuth();
+  const { location, errorMsg } = useLocation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const [isEmail, setIsEmail] = useState(false);
-  const [isPassword, setIsPassword] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [type, setType] = useState("");
 
-  const [isRemember, setIsRemember] = useState(false);
+  if (errorMsg) {
+    Alert.alert("Location Error", errorMsg);
+  }
 
-  const onLogin = () => {
-    if (type === "creator") {
-      navigation.navigate("Admin Stack");
-    } else {
-      navigation.navigate("User Stack");
+  useEffect(() => {
+    AsyncStorage.getItem("type").then((value) => {
+      if (value == null) {
+        setType("attendee");
+      } else {
+        setType(value);
+      }
+    });
+  }, []);
+
+  const validateEmail = (email) => {
+    // Basic email validation
+    return /\S+@\S+\.\S+/.test(email);
+  };
+
+  const validatePassword = (password) => {
+    // Basic password validation (at least 6 characters)
+    return password.length >= 6;
+  };
+
+  const handleLogin = async () => {
+    const isEmailValid = validateEmail(email);
+    const isPasswordValid = validatePassword(password);
+
+    if (!isEmailValid || !isPasswordValid) {
+      setIsEmailValid(isEmailValid);
+      setIsPasswordValid(isPasswordValid);
+      return;
+    }
+
+    try {
+      const response = await login(email, password);
+      if (!response.success) {
+        Alert.alert("Sign In", response.msg);
+      }
+    } catch (error) {
+      console.log("Login error: ", error);
+      // Handle login error (e.g., display error message)
     }
   };
+
   const onRegister = () => {
     navigation.navigate("Register");
   };
 
-  const onGoogle = () => {};
+  const onGoogle = () => {
+    // Implement Google login here
+  };
 
   const onForgotPass = () => {
     navigation.navigate("Forgot Password");
@@ -57,14 +101,14 @@ const Login = ({ route }) => {
       <View
         style={[
           styles.loginInputCover,
-          isEmail && styles.loginInputCoverActive,
+          !isEmailValid && styles.loginInputCoverError,
         ]}>
         <Ionicons name="mail" style={styles.inputIcons} />
         <TextInput
           style={[
             styles.inputView,
             {
-              borderBottomColor: colors.grey,
+              borderBottomColor: isEmailValid ? colors.grey : colors.errorText,
               color: colors.card,
             },
           ]}
@@ -73,21 +117,26 @@ const Login = ({ route }) => {
           placeholderTextColor={colors.grey}
           onChangeText={(value) => {
             setEmail(value);
+            setIsEmailValid(true); // Reset error state on change
           }}
-          onFocus={() => setIsEmail(true)}
-          onBlur={() => setIsEmail(false)}
+          onBlur={() => setIsEmailValid(validateEmail(email))}
         />
       </View>
       <View
         style={[
           styles.loginInputCover,
-          isPassword && styles.loginInputCoverActive,
+          !isPasswordValid && styles.loginInputCoverError,
         ]}>
         <Ionicons name="lock-closed" style={styles.inputIcons} />
         <TextInput
           style={[
             styles.inputView,
-            { borderBottomColor: colors.grey, color: colors.card },
+            {
+              borderBottomColor: isPasswordValid
+                ? colors.grey
+                : colors.errorText,
+              color: colors.card,
+            },
           ]}
           secureTextEntry={!isPasswordVisible}
           value={password}
@@ -95,9 +144,9 @@ const Login = ({ route }) => {
           placeholderTextColor={colors.grey}
           onChangeText={(value) => {
             setPassword(value);
+            setIsPasswordValid(true); // Reset error state on change
           }}
-          onFocus={() => setIsPassword(true)}
-          onBlur={() => setIsPassword(false)}
+          onBlur={() => setIsPasswordValid(validatePassword(password))}
         />
         <TouchableOpacity
           onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
@@ -108,32 +157,33 @@ const Login = ({ route }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.userOptions}>
-        {/* <View style={styles.rememberView}>
-          <TouchableOpacity
-            style={styles.rememberButton}
-            onPress={() => setIsRemember(!isRemember)}>
-            {isRemember ? (
-              <Ionicons name="checkmark" style={styles.checkmarkIcon} />
-            ) : null}
-          </TouchableOpacity>
-          <Text style={styles.rememberText}>Remember Me</Text>
-        </View> */}
         <TouchableOpacity onPress={onForgotPass} style={styles.forgotView}>
           <Text style={styles.forgotText}>Forgot Password?</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.navigationView}>
         <TouchableOpacity
-          onPress={onLogin}
-          style={[styles.button, { backgroundColor: colors.button }]}>
-          <Text style={[styles.buttonText, { color: colors.buttonText }]}>
-            Login
-          </Text>
+          onPress={handleLogin}
+          style={[
+            styles.button,
+            {
+              backgroundColor: colors.button,
+              opacity: isEmailValid && isPasswordValid ? 1 : 0.5,
+            },
+          ]}
+          disabled={loading}>
+          {loading ? (
+            <ActivityIndicator color={colors.background} />
+          ) : (
+            <Text style={[styles.buttonText, { color: colors.buttonText }]}>
+              Login
+            </Text>
+          )}
         </TouchableOpacity>
         <TouchableOpacity onPress={onRegister} style={styles.loginButton}>
           <Text style={[styles.loginButtonText, { color: colors.text }]}>
-            Don't have an account?
-            <Text style={styles.loginText}> Register</Text>
+            Don't have an account?{" "}
+            <Text style={styles.loginText}>Register</Text>
           </Text>
         </TouchableOpacity>
         <View style={styles.orView}>
@@ -184,8 +234,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
   },
-  loginInputCoverActive: {
-    borderBottomColor: colors.text,
+  loginInputCoverError: {
+    borderColor: colors.red,
   },
   inputView: {
     flex: 1,
@@ -201,25 +251,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     paddingHorizontal: 20,
     paddingVertical: 10,
-  },
-  rememberView: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  rememberButton: {
-    borderWidth: 1,
-    borderRadius: 5,
-    height: 25,
-    width: 25,
-  },
-  checkmarkIcon: {
-    color: colors.green,
-    fontSize: 20,
-    fontFamily: "black",
-  },
-  rememberText: {
-    marginHorizontal: 5,
-    fontFamily: "bold",
   },
   forgotView: {},
   forgotText: {

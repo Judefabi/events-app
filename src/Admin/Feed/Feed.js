@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     backgroundColor: colors.background,
-    marginTop: 50,
+    paddingTop: 50,
   },
   titleContainer: {
     paddingVertical: 10,

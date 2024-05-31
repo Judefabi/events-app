@@ -119,7 +119,8 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     paddingHorizontal: 20,
-    marginTop: 100,
+    backgroundColor: colors.background,
+    paddingTop: 100,
   },
   imageContainer: {
     marginTop: 20,

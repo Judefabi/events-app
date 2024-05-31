@@ -69,8 +69,9 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     paddingHorizontal: 20,
+    backgroundColor: colors.background,
     paddingBottom: 100,
-    marginTop: 70,
+    paddingTop: 70,
   },
   textInput: {
     height: 50,
