@@ -15,10 +15,13 @@ import userProfile from "../../../models/userModel";
 import events from "../../../models/eventsModel"; // Assuming events model has confirmed events
 import { colors } from "../../../globals/colors";
 import { useAuth } from "../../../contexts/authContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 const Tab = createMaterialTopTabNavigator();
 
 const Profile = () => {
+  const navigation = useNavigation()
   const { name, email, profileImage, bio, location, interests, socialLinks } =
     userProfile;
   const { logout } = useAuth();
@@ -28,6 +31,11 @@ const Profile = () => {
     if (!response.success) {
       Alert.alert("Logout Failed", response.msg);
     }
+  };
+
+  const onSwitchUser = async () => {
+    await AsyncStorage.setItem("type", "creator");
+    navigation.navigate("Login");
   };
 
   return (
@@ -59,6 +67,11 @@ const Profile = () => {
         <View style={{ paddingVertical: 20 }}>
           <TouchableOpacity onPress={onLogOut}>
             <Text>Log Out</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ paddingVertical: 20 }}>
+          <TouchableOpacity onPress={onSwitchUser}>
+            <Text>Switch to Creator Account</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      console.log("current user", currentUser);
+      // console.log("current user", currentUser);
       if (currentUser) {
         setIsAuthenticated(true);
       } else {
@@ -34,13 +34,14 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     AsyncStorage.getItem("type").then((value) => {
+      console.log("fetched", value);
       if (value == null) {
         setType("attendee");
       } else {
         setType(value);
       }
     });
-  }, []);
+  }, [type]);
 
   const login = async (email, password) => {
     setLoading(true);
