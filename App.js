@@ -11,6 +11,7 @@ import { AuthProvider } from "./contexts/authContext";
 import { LocationProvider } from "./contexts/locationContext";
 import { LoadingProvider } from "./contexts/loadingContext";
 import EventsProvider from "./contexts/eventsContext";
+import { UserProvider } from "./contexts/userContext";
 
 const AppContent = () => {
   const { fontsLoaded, fontError } = useFontContext();
@@ -38,17 +39,19 @@ const App = () => {
         <EventsProvider>
           <FontProvider>
             <LoadingProvider>
-              <View style={{ flex: 1, backgroundColor: colors.background }}>
-                <StatusBar
-                  barStyle={
-                    colorScheme === "dark" ? "light-content" : "dark-content"
-                  }
-                  hidden={false}
-                  backgroundColor={colors.line}
-                  translucent={true}
-                />
-                <AppContent />
-              </View>
+              <UserProvider>
+                <View style={{ flex: 1, backgroundColor: colors.background }}>
+                  <StatusBar
+                    barStyle={
+                      colorScheme === "dark" ? "light-content" : "dark-content"
+                    }
+                    hidden={false}
+                    backgroundColor={colors.line}
+                    translucent={true}
+                  />
+                  <AppContent />
+                </View>
+              </UserProvider>
             </LoadingProvider>
           </FontProvider>
         </EventsProvider>

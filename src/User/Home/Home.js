@@ -161,36 +161,38 @@ const Home = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.tabsView}>
-          <TouchableOpacity
-            onPress={() => setIsToday(true)}
-            style={isToday ? styles.tabButtonActive : styles.tabButton}>
-            <Text
-              style={
-                isToday ? styles.tabButtonTextActive : styles.tabButtonText
-              }>
-              Today
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setIsToday(false)}
-            style={!isToday ? styles.tabButtonActive : styles.tabButton}>
-            <Text
-              style={
-                !isToday ? styles.tabButtonTextActive : styles.tabButtonText
-              }>
-              Tomorrow
-            </Text>
-          </TouchableOpacity>
+          {todayEvents.length > 0 ? (
+            <TouchableOpacity
+              onPress={() => setIsToday(true)}
+              style={isToday ? styles.tabButtonActive : styles.tabButton}>
+              <Text
+                style={
+                  isToday ? styles.tabButtonTextActive : styles.tabButtonText
+                }>
+                Today
+              </Text>
+            </TouchableOpacity>
+          ) : null}
+          {tomorrowEvents.length > 0 ? (
+            <TouchableOpacity
+              onPress={() => setIsToday(false)}
+              style={!isToday ? styles.tabButtonActive : styles.tabButton}>
+              <Text
+                style={
+                  !isToday ? styles.tabButtonTextActive : styles.tabButtonText
+                }>
+                Tomorrow
+              </Text>
+            </TouchableOpacity>
+          ) : null}
         </View>
         <ScrollView horizontal>
-          {isToday ? (
+          {todayEvents.length > 0 && isToday ? (
             todayEvents?.length > 0 ? (
               todayEvents?.map((item, index) => (
                 <HorizontalCard key={index} event={item} attending={false} />
               ))
-            ) : (
-              <NoEventsHorizontalCard />
-            )
+            ) : null
           ) : tomorrowEvents?.length > 0 ? (
             tomorrowEvents?.map((item, index) => (
               <HorizontalCard key={index} event={item} />

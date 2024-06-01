@@ -6,14 +6,29 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../../globals/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { eventsRef, userRef } from "../../../firebaseConfig";
+import {
+  arrayUnion,
+  collection,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { useUser } from "../../../contexts/userContext";
 
 const EventsDetails = ({ route }) => {
   const navigation = useNavigation();
+  const { userProfile } = useUser();
+
+  // console.log(userProfile);
+  // route.params.event.attending = false;
+  const [confirming, setConfirming] = useState(false);
 
   const {
     id,
@@ -26,8 +41,6 @@ const EventsDetails = ({ route }) => {
     attendees,
     tags,
     tickets,
-    ticketsSold,
-    ticketRanges,
     attending,
   } = route?.params?.event;
 
@@ -40,6 +53,59 @@ const EventsDetails = ({ route }) => {
       return `${(count / 1000).toFixed(0).replace(".0", "")}k`;
     }
   };
+
+  let ticketAvailable;
+
+  if (tickets) {
+    ticketAvailable = tickets?.reduce((total, ticket) => {
+      return total + parseInt(ticket.quantity, 10);
+    }, 0);
+  }
+
+  const confirmAttending = async () => {
+    setConfirming(true);
+    // Add event to user's attending subcollection
+    try {
+      const userId = userProfile.uid;
+      const userDocRef = doc(userRef, userId);
+      const eventDocRef = doc(eventsRef, id);
+
+      // Add event to user's attending subcollection
+      await setDoc(doc(collection(userDocRef, "attendingEvents"), id), {
+        eventId: id,
+        name: name,
+        date: date,
+        time: time,
+        location: location,
+        description: description,
+        image: image,
+        tickets: tickets,
+      });
+
+      // Add user to event's attendees subcollection
+      await setDoc(doc(collection(eventDocRef, "attendees"), userId), {
+        userId: userId,
+        name: userProfile.name,
+        email: userProfile.email,
+        image: userProfile?.photoURL || "",
+        // tickets: tickets,
+      });
+
+      // Optionally, update the event's attendee count
+      await updateDoc(eventDocRef, {
+        attendees: arrayUnion(userId),
+      });
+
+      // Optionally, update the local state
+      route.params.event.attending = true;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setConfirming(false);
+    }
+  };
+
+  const viewTicket = () => {};
 
   return (
     <View style={styles.mainContainer}>
@@ -98,26 +164,29 @@ const EventsDetails = ({ route }) => {
         <View style={styles.firstPartView}>
           <View style={styles.ticketPriceView}>
             <Text style={styles.ticketDenom}>KES.</Text>
-            {/* <Text style={styles.ticketPrice}>{ticketRanges[0]?.price}</Text> */}
-            <Text style={styles.ticketDeligation}>
-              {/* / {ticketRanges[0]?.type} */}
-            </Text>
+            <Text style={styles.ticketPrice}>{tickets[0]?.price}</Text>
+            <Text style={styles.ticketDeligation}>/ {tickets[0]?.name}</Text>
           </View>
           <View style={styles.ticketsNumberView}>
-            <Text style={styles.ticketRemainingNumber}>
-              {/* {tickets - ticketsSold} */}
-            </Text>
+            <Text style={styles.ticketRemainingNumber}>{ticketAvailable}</Text>
             <Text style={styles.ticketNumber}>
-              {/* /{tickets} tickets remaining */}
+              / {tickets[0]?.quantity} tickets remaining
             </Text>
           </View>
         </View>
-        {attending ? (
-          <TouchableOpacity style={styles.ticketsButton}>
-            <Text style={styles.ticketsButtonText}>Get Ticket</Text>
+        {!attending ? (
+          <TouchableOpacity
+            onPress={confirmAttending}
+            style={styles.ticketsButton}>
+            {confirming ? (
+              <ActivityIndicator size="small" color={colors.background} />
+            ) : (
+              <Text style={styles.ticketsButtonText}>Confirm Attending</Text>
+            )}
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
+            onPress={viewTicket}
             style={[styles.ticketsButton, { backgroundColor: colors.green }]}>
             <Text
               style={[styles.ticketsButtonText, { color: colors.background }]}>
