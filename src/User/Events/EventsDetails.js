@@ -22,7 +22,7 @@ const EventsDetails = ({ route }) => {
     time,
     location,
     description,
-    imageUrl,
+    image,
     attendees,
     tags,
     tickets,
@@ -56,12 +56,12 @@ const EventsDetails = ({ route }) => {
               <Text style={styles.scheduleText}>
                 {date} <Text style={styles.strokes}>/</Text> {time}
                 <Text style={styles.strokes}> /</Text>{" "}
-                {formatAttendeeCount(attendees.length)}{" "}
+                {attendees && formatAttendeeCount(attendees?.length)}{" "}
                 <Ionicons name="people" size={16} /> attending
               </Text>
             </View>
             <View style={styles.attendeesContainer}>
-              {attendees.slice(0, 4).map((attendee, index) => (
+              {attendees?.slice(0, 4).map((attendee, index) => (
                 <React.Fragment key={attendee.id}>
                   <Image
                     source={{ uri: attendee.image }}
@@ -76,7 +76,7 @@ const EventsDetails = ({ route }) => {
           </View>
         </View>
         <View style={styles.imageView}>
-          <Image style={styles.image} source={{ uri: imageUrl }} />
+          <Image style={styles.image} source={{ uri: image }} />
         </View>
         <View style={styles.descriptionView}>
           <Text style={styles.descriptionTitle}>DESCRIPTION</Text>
@@ -84,7 +84,7 @@ const EventsDetails = ({ route }) => {
         </View>
         <View style={styles.eventTagsView}>
           {tags &&
-            tags.map((tag, index) => (
+            tags?.map((tag, index) => (
               <View style={styles.tagPill} key={index}>
                 <Text style={styles.tagPillText}>{tag}</Text>
               </View>
@@ -98,17 +98,17 @@ const EventsDetails = ({ route }) => {
         <View style={styles.firstPartView}>
           <View style={styles.ticketPriceView}>
             <Text style={styles.ticketDenom}>KES.</Text>
-            <Text style={styles.ticketPrice}>{ticketRanges[0].price}</Text>
+            {/* <Text style={styles.ticketPrice}>{ticketRanges[0]?.price}</Text> */}
             <Text style={styles.ticketDeligation}>
-              / {ticketRanges[0].type}
+              {/* / {ticketRanges[0]?.type} */}
             </Text>
           </View>
           <View style={styles.ticketsNumberView}>
             <Text style={styles.ticketRemainingNumber}>
-              {tickets - ticketsSold}
+              {/* {tickets - ticketsSold} */}
             </Text>
             <Text style={styles.ticketNumber}>
-              /{tickets} tickets remaining
+              {/* /{tickets} tickets remaining */}
             </Text>
           </View>
         </View>

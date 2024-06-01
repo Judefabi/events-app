@@ -18,12 +18,17 @@ import HorizontalCard from "../Components/HorizontalCard";
 import VerticalCard from "../Components/VerticalCard";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useEvents } from "../../../contexts/eventsContext";
 
 const Home = () => {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const { name, location, profileImage } = userProfile;
-  const [events, setEvents] = useState(fevents);
+  // const [events, setEvents] = useState(fevents);
+
+  const { events, loading } = useEvents();
+
+  // console.log("events", events);
 
   const [searchInput, setSearchInput] = useState("");
   const [isSearch, setIsSearch] = useState(false);
@@ -64,13 +69,19 @@ const Home = () => {
     </View>
   );
 
-  // Filter events for today and tomorrow
+  const today = moment().startOf("day");
+  const tomorrow = moment().add(1, "day").startOf("day");
+
   const todayEvents = events.filter((item) =>
-    moment(item.date).isSame(moment(), "day")
+    moment(item.date, "DD/MM/YYYY").isSame(today, "day")
   );
+
   const tomorrowEvents = events.filter((item) =>
-    moment(item.date).isSame(moment().add(1, "day"), "day")
+    moment(item.date, "DD/MM/YYYY").isSame(tomorrow, "day")
   );
+
+  // console.log("Today's Events:", todayEvents);
+  // console.log("Tomorrow's Events:", tomorrowEvents);
 
   const onViewAll = () => {
     navigation.navigate("Events", {

@@ -13,7 +13,7 @@ import { colors } from "../../../globals/colors";
 
 const VerticalCard = ({ event, attending }) => {
   const navigation = useNavigation();
-  const { id, name, date, time, location, description, imageUrl, attendees } =
+  const { id, name, date, time, location, description, image, attendees } =
     event;
 
   const formatAttendeeCount = (count) => {
@@ -37,7 +37,7 @@ const VerticalCard = ({ event, attending }) => {
     <TouchableOpacity onPress={onDetails} style={styles.card}>
       <View style={styles.cardInnerView}>
         <View style={styles.imageView}>
-          <Image style={styles.eventImage} source={{ uri: imageUrl }} />
+          <Image style={styles.eventImage} source={{ uri: image }} />
         </View>
       </View>
       <View style={styles.secondPart}>

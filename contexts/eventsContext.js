@@ -21,6 +21,7 @@ const EventsProvider = ({ children }) => {
   const [uploading, setUploading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const storage = getStorage();
   const { user } = useAuth();
@@ -71,16 +72,17 @@ const EventsProvider = ({ children }) => {
       await setDoc(eventDocRef, eventData);
 
       setModalVisible(true);
-      console.log("Event created with details:", eventData);
+      //   console.log("Event created with details:", eventData);
     } catch (e) {
       console.log(e);
-      alert("Upload failed, sorry :(");
+      alert("Event creation failed, sorry :(");
     } finally {
       setUploading(false);
     }
   };
 
   const fetchEvents = async () => {
+    setLoading(true);
     try {
       const querySnapshot = await getDocs(eventsRef);
       const fetchedEvents = querySnapshot.docs.map((doc) => ({
@@ -88,9 +90,11 @@ const EventsProvider = ({ children }) => {
         ...doc.data(),
       }));
       setEvents(fetchedEvents);
+      setLoading(false);
     } catch (e) {
       console.log(e);
-      alert("Failed to fetch events, sorry :(");
+      setLoading(False);
+      //   alert("Failed to fetch events, sorry :(");
     }
   };
 
@@ -107,6 +111,7 @@ const EventsProvider = ({ children }) => {
         setModalVisible,
         fetchEvents,
         events,
+        loading,
       }}>
       {children}
     </EventsContext.Provider>

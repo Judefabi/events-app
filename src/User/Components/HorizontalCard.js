@@ -14,7 +14,7 @@ import { colors } from "../../../globals/colors";
 const HorizontalCard = ({ event, attending }) => {
   const navigation = useNavigation();
 
-  const { id, name, date, time, location, description, imageUrl, attendees } =
+  const { id, name, date, time, location, description, image, attendees } =
     event;
 
   const formatAttendeeCount = (count) => {
@@ -46,7 +46,7 @@ const HorizontalCard = ({ event, attending }) => {
         attending ? { width: Dimensions.get("window").width * 0.9 } : null,
       ]}>
       <View style={styles.cardInnerView}>
-        <Image style={styles.eventImage} source={{ uri: imageUrl }} />
+        <Image style={styles.eventImage} source={{ uri: image }} />
         <View style={styles.imageOverlayView}>
           {attending ? (
             <TouchableOpacity

@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }) => {
         password
       );
 
-      await setDoc(doc(db, "users", user?.uid), {
+      await setDoc(doc(userRef, user?.uid), {
         name,
         email,
         phone,

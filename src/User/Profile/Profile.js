@@ -10,9 +10,7 @@ import {
 } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import HorizontalCard from "../Components/HorizontalCard";
 import userProfile from "../../../models/userModel";
-import events from "../../../models/eventsModel"; // Assuming events model has confirmed events
 import { colors } from "../../../globals/colors";
 import { useAuth } from "../../../contexts/authContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";

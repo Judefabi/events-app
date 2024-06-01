@@ -1,6 +1,7 @@
 import { View, StyleSheet, Animated } from "react-native";
 import React, { useRef, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "../../globals/colors";
 
 const ShimmerPlaceholder = ({ style }) => {
   const shimmerValue = useRef(new Animated.Value(0)).current;
@@ -46,6 +47,7 @@ const LoadingSkeleton = () => {
       <ShimmerPlaceholder style={styles.tabsView} />
       <ShimmerPlaceholder style={styles.featuredEventsView} />
       <ShimmerPlaceholder style={styles.otherEventsView} />
+      <ShimmerPlaceholder style={styles.otherEventsView} />
     </View>
   );
 };
@@ -56,7 +58,9 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     alignItems: "center",
-    padding: 16,
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    backgroundColor: colors.background,
   },
   topView: {
     width: "100%",
@@ -68,15 +72,17 @@ const styles = StyleSheet.create({
   },
   searchView: {
     width: "100%",
-    height: 40,
+    height: 80,
     backgroundColor: "#E0E0E0",
-    borderRadius: 8,
-    marginBottom: 16,
+    borderRadius: 10,
+    marginVertical: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
     overflow: "hidden",
   },
   tabsView: {
     width: "100%",
-    height: 30,
+    height: 250,
     backgroundColor: "#E0E0E0",
     borderRadius: 8,
     marginBottom: 16,
@@ -84,7 +90,7 @@ const styles = StyleSheet.create({
   },
   featuredEventsView: {
     width: "100%",
-    height: 150,
+    height: 100,
     backgroundColor: "#E0E0E0",
     borderRadius: 8,
     marginBottom: 16,
@@ -92,9 +98,10 @@ const styles = StyleSheet.create({
   },
   otherEventsView: {
     width: "100%",
-    height: 200,
+    height: 90,
     backgroundColor: "#E0E0E0",
     borderRadius: 8,
     overflow: "hidden",
+    marginBottom: 10,
   },
 });
