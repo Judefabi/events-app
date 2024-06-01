@@ -62,12 +62,13 @@ const ConfirmDetails = ({ route }) => {
         image: uploadUrl,
         creatorId: user?.uid,
         creator: user?.email,
+        createdAt: new Date(),
       };
 
       const eventDocRef = doc(eventsRef, uuidv4());
       await setDoc(eventDocRef, eventData);
 
-      // setModalVisible(true);
+      setModalVisible(true);
       console.log("Event created with details:", eventData);
     } catch (e) {
       console.log(e);
