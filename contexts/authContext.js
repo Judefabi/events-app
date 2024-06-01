@@ -19,7 +19,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      // console.log("current user", currentUser);
       if (currentUser) {
         setIsAuthenticated(true);
       } else {
@@ -34,7 +33,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     AsyncStorage.getItem("type").then((value) => {
-      console.log("fetched", value);
       if (value == null) {
         setType("attendee");
       } else {
@@ -47,12 +45,10 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
-      console.log("response", response);
       setLoading(false);
       return { success: true, msg: response };
     } catch (error) {
       setLoading(false);
-      console.log("Login error: ", error);
       let msg;
       switch (error.code) {
         case "auth/invalid-credential":
@@ -115,7 +111,6 @@ export const AuthProvider = ({ children }) => {
       await signOut(auth);
       return { success: true };
     } catch (error) {
-      console.log("Logout error: ", error.message);
       return { success: false, msg: error.message, error: e };
     }
   };

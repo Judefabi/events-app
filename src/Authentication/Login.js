@@ -69,7 +69,19 @@ const Login = ({ route }) => {
     try {
       const response = await login(email, password);
       if (!response.success) {
-        Alert.alert("Sign In", response.msg);
+        Alert.alert("Sign In Error", response.msg);
+      } else {
+        AsyncStorage.getItem("type").then((value) => {
+          if (value == null) {
+            navigation.navigate("User Stack");
+          } else {
+            if (value === "creator") {
+              navigation.navigate("Admin Stack");
+            } else {
+              navigation.navigate("User Stack");
+            }
+          }
+        });
       }
     } catch (error) {
       console.log("Login error: ", error);

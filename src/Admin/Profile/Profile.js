@@ -13,12 +13,30 @@ import HorizontalCard from "../Components/HorizontalCard";
 import userProfile from "../../../models/adminModel";
 import events from "../../../models/eventsModel";
 import { colors } from "../../../globals/colors";
+import { useAuth } from "../../../contexts/authContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 const Tab = createMaterialTopTabNavigator();
 
 const Profile = () => {
   const { name, email, profileImage, bio, location, interests, socialLinks } =
     userProfile;
+  const navigation = useNavigation();
+
+  const { logout } = useAuth();
+
+  const onLogOut = async () => {
+    const response = await logout();
+    if (!response.success) {
+      Alert.alert("Logout Failed", response.msg);
+    }
+  };
+
+  const onSwitchUser = async () => {
+    await AsyncStorage.setItem("type", "attendee");
+    navigation.navigate("Login");
+  };
 
   return (
     <ScrollView style={styles.mainContainer}>
@@ -46,7 +64,16 @@ const Profile = () => {
             <Ionicons name="logo-instagram" size={24} color={colors.text} />
           </TouchableOpacity>
         </View>
-
+        <View style={{ paddingVertical: 20 }}>
+          <TouchableOpacity onPress={onLogOut}>
+            <Text>Log Out</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ paddingVertical: 20 }}>
+          <TouchableOpacity onPress={onSwitchUser}>
+            <Text>Switch to Creator Account</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );

@@ -1,5 +1,12 @@
-import React, { createContext, useContext, useState } from "react";
-import { doc, setDoc, collection, getFirestore } from "firebase/firestore";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import {
+  doc,
+  setDoc,
+  collection,
+  getFirestore,
+  getDoc,
+  getDocs,
+} from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
@@ -13,7 +20,8 @@ export const useEvents = () => useContext(EventsContext);
 const EventsProvider = ({ children }) => {
   const [uploading, setUploading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const db = getFirestore();
+  const [events, setEvents] = useState([]);
+
   const storage = getStorage();
   const { user } = useAuth();
 
@@ -72,8 +80,34 @@ const EventsProvider = ({ children }) => {
     }
   };
 
+  const fetchEvents = async () => {
+    try {
+      const querySnapshot = await getDocs(eventsRef);
+      const fetchedEvents = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setEvents(fetchedEvents);
+    } catch (e) {
+      console.log(e);
+      alert("Failed to fetch events, sorry :(");
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
   return (
-    <EventsContext.Provider value={{ onCreateEvent, uploading, modalVisible, setModalVisible }}>
+    <EventsContext.Provider
+      value={{
+        onCreateEvent,
+        uploading,
+        modalVisible,
+        setModalVisible,
+        fetchEvents,
+        events,
+      }}>
       {children}
     </EventsContext.Provider>
   );
