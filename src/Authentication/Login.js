@@ -72,15 +72,12 @@ const Login = ({ route }) => {
         Alert.alert("Sign In Error", response.msg);
       } else {
         AsyncStorage.getItem("type").then((value) => {
-          if (value == null) {
-            navigation.navigate("User Stack");
-          } else {
-            if (value === "creator") {
-              navigation.navigate("Admin Stack");
-            } else {
-              navigation.navigate("User Stack");
-            }
-          }
+          navigation.reset({
+            index: 0,
+            routes: [
+              { name: value === "creator" ? "Admin Stack" : "User Stack" },
+            ],
+          });
         });
       }
     } catch (error) {

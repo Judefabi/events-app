@@ -30,12 +30,20 @@ const Profile = () => {
     const response = await logout();
     if (!response.success) {
       Alert.alert("Logout Failed", response.msg);
+    } else {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      });
     }
   };
 
   const onSwitchUser = async () => {
     await AsyncStorage.setItem("type", "attendee");
-    navigation.navigate("Login");
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Login" }],
+    });
   };
 
   return (
@@ -71,7 +79,7 @@ const Profile = () => {
         </View>
         <View style={{ paddingVertical: 20 }}>
           <TouchableOpacity onPress={onSwitchUser}>
-            <Text>Switch to Creator Account</Text>
+            <Text>Switch to Normal Account</Text>
           </TouchableOpacity>
         </View>
       </View>

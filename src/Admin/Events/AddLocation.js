@@ -43,7 +43,7 @@ const LocationSearch = ({ route }) => {
         fetchDetails={true}
         onPress={handleLocationSelect}
         query={{
-          key: "AIzaSyChs68LyupZlH_7g8x3bUko8HJm0L-9cyc",
+          key: process.env.EXPO_PUBLIC_GOOGLE_API_KEY,
           language: "en",
         }}
         styles={{

@@ -42,11 +42,10 @@ const AuthStack = () => {
     if (isFirstLaunch) {
       navigation.navigate("Launch");
     } else if (isAuthenticated) {
-      if (type === "creator") {
-        navigation.navigate("Admin Stack");
-      } else if (type === "attendee") {
-        navigation.navigate("User Stack");
-      }
+      navigation.reset({
+        index: 0,
+        routes: [{ name: type === "creator" ? "Admin Stack" : "User Stack" }],
+      });
     } else {
       navigation.navigate("Login");
     }

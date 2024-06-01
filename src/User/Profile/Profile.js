@@ -21,7 +21,7 @@ import { useNavigation } from "@react-navigation/native";
 const Tab = createMaterialTopTabNavigator();
 
 const Profile = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const { name, email, profileImage, bio, location, interests, socialLinks } =
     userProfile;
   const { logout } = useAuth();
@@ -30,12 +30,20 @@ const Profile = () => {
     const response = await logout();
     if (!response.success) {
       Alert.alert("Logout Failed", response.msg);
+    } else {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      });
     }
   };
 
   const onSwitchUser = async () => {
     await AsyncStorage.setItem("type", "creator");
-    navigation.navigate("Login");
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Login" }],
+    });
   };
 
   return (
