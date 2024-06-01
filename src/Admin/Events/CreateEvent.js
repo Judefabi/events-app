@@ -17,7 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const CreateEvent = () => {
   const navigation = useNavigation();
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(new Date(Date.now() + 12 * 60 * 60 * 1000));
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
   const [isFreeEvent, setIsFreeEvent] = useState(false);
@@ -25,6 +25,10 @@ const CreateEvent = () => {
   const [eventName, setEventName] = useState("");
   const [eventCategory, setEventCategory] = useState("");
   const [eventDescription, setEventDescription] = useState("");
+
+  const [eventNameValid, setEventNameValid] = useState(true);
+  const [eventCategoryValid, setEventCategoryValid] = useState(true);
+  const [eventDescriptionValid, setEventDescriptionValid] = useState(true);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -58,7 +62,34 @@ const CreateEvent = () => {
     showMode("time");
   };
 
+  const validateInputs = () => {
+    let valid = true;
+    if (eventName.trim() === "") {
+      setEventNameValid(false);
+      valid = false;
+    } else {
+      setEventNameValid(true);
+    }
+    if (eventCategory.trim() === "") {
+      setEventCategoryValid(false);
+      valid = false;
+    } else {
+      setEventCategoryValid(true);
+    }
+    if (eventDescription.trim() === "") {
+      setEventDescriptionValid(false);
+      valid = false;
+    } else {
+      setEventDescriptionValid(true);
+    }
+    return valid;
+  };
+
   const onNext = () => {
+    if (!validateInputs()) {
+      return;
+    }
+
     const eventDetails = {
       image,
       name: eventName,
@@ -78,6 +109,8 @@ const CreateEvent = () => {
       navigation.navigate("Add Tickets", { eventDetails });
     }
   };
+
+  const minimumDate = new Date(Date.now() + 12 * 60 * 60 * 1000);
 
   return (
     <View style={styles.mainContainer}>
@@ -106,7 +139,11 @@ const CreateEvent = () => {
           )}
         </TouchableOpacity>
         <View style={styles.inputsView}>
-          <View style={styles.eventInputView}>
+          <View
+            style={[
+              styles.eventInputView,
+              !eventNameValid && { borderColor: colors.red },
+            ]}>
             <TextInput
               style={styles.eventInput}
               placeholder="Event Name*"
@@ -114,7 +151,11 @@ const CreateEvent = () => {
               onChangeText={setEventName}
             />
           </View>
-          <View style={styles.eventInputView}>
+          <View
+            style={[
+              styles.eventInputView,
+              !eventCategoryValid && { borderColor: colors.red },
+            ]}>
             <TextInput
               style={styles.eventInput}
               placeholder="Event Category*"
@@ -149,17 +190,21 @@ const CreateEvent = () => {
                 mode={mode}
                 is24Hour={true}
                 onChange={onChange}
-                minimumDate={new Date()}
+                minimumDate={minimumDate}
               />
             )}
           </View>
 
-          <View style={styles.eventInputView}>
+          <View
+            style={[
+              styles.eventInputView,
+              !eventDescriptionValid && { borderColor: colors.red },
+            ]}>
             <TextInput
               style={styles.eventInput}
               placeholder="Description*"
               multiline
-              numberOfLines={8}
+              numberOfLines={6}
               textAlignVertical="top"
               value={eventDescription}
               onChangeText={setEventDescription}
@@ -195,14 +240,15 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     backgroundColor: colors.background,
+    paddingTop: 90,
   },
   uploadPictureButton: {
-    paddingTop: 100,
     height: Dimensions.get("window").height * 0.25,
     backgroundColor: colors.line,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 10,
+    marginTop: 20,
   },
   uploadPictureButtonText: {
     color: colors.grey,
@@ -265,31 +311,29 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   rememberButton: {
+    height: 20,
+    width: 20,
     borderWidth: 1,
-    borderRadius: 5,
-    height: 25,
-    width: 25,
-    marginRight: 10,
-    marginLeft: 10,
-  },
-  checkmarkIcon: {
-    color: colors.green,
-    fontSize: 20,
-  },
-  button: {
-    width: Dimensions.get("window").width * 0.9,
-    alignSelf: "center",
-    height: 50,
-    marginVertical: 20,
-    alignContent: "center",
+    borderColor: colors.grey,
     justifyContent: "center",
-    borderRadius: 10,
-    position: "absolute",
-    bottom: 30,
     alignItems: "center",
   },
+  rememberText: {
+    color: colors.text,
+    fontSize: 12,
+    paddingHorizontal: 10,
+  },
+  checkmarkIcon: {
+    fontSize: 20,
+    color: colors.button,
+  },
+  button: {
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+    paddingVertical: 15,
+  },
   buttonText: {
-    alignSelf: "center",
-    fontSize: 16,
+    fontSize: 18,
   },
 });

@@ -7,29 +7,107 @@ import {
   TouchableOpacity,
   View,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../../globals/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import SuccessModal from "../../../common/SuccessModal";
+import { eventsRef, storage } from "../../../firebaseConfig";
+import "react-native-get-random-values";
+import { v4 as uuidv4 } from "uuid";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useLoading } from "../../../contexts/loadingContext";
+import { doc, setDoc } from "firebase/firestore";
+import { useAuth } from "../../../contexts/authContext";
 
 const ConfirmDetails = ({ route }) => {
   const navigation = useNavigation();
-  const { eventDetails, tickets, location } = route.params;
+  const { eventDetails } = route.params;
+  const { showLoader, hideLoader, showToast } = useLoading();
+  const { user } = useAuth(user);
 
   const [isModalVisible, setModalVisible] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
-  console.log(
-    "Event created with details:",
-    eventDetails,
-    eventDetails.tickets,
-    eventDetails.location
-  );
+  // const onCreateEvent = async () => {
+  //   try {
+  //     if (eventDetails.image) {
+  //       const { image } = eventDetails;
+  //       const uploadUrl = await uploadImageAsync(image);
+  //       console.log(uploadUrl);
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   } finally {
+  //     setUploading(false);
+  //   }
+  // };
 
-  const onCreateEvent = () => {
-    setModalVisible(true);
-    // console.log("Event created with details:", eventDetails, tickets, location);
-    // navigation.navigate("EventCreatedSuccess");
+  // console.log("Event created with details:", user?.email);
+
+  const onCreateEvent = async () => {
+    try {
+      setUploading(true);
+      let uploadUrl = null;
+      const eventId = uuidv4();
+
+      if (eventDetails.image) {
+        const { image } = eventDetails;
+        uploadUrl = await uploadImageAsync(image, eventId);
+      }
+
+      const eventData = {
+        ...eventDetails,
+        image: uploadUrl,
+        creatorId: user?.uid,
+        creator: user?.email,
+      };
+
+      const eventDocRef = doc(eventsRef, uuidv4());
+      await setDoc(eventDocRef, eventData);
+
+      // setModalVisible(true);
+      console.log("Event created with details:", eventData);
+    } catch (e) {
+      console.log(e);
+      alert("Upload failed, sorry :(");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  async function uploadImageAsync(uri, eventId) {
+    console.log("received", uri);
+    setUploading(true);
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+
+    const fileRef = ref(getStorage(), `events/${eventId}`);
+    const result = await uploadBytes(fileRef, blob);
+    blob.close();
+    return await getDownloadURL(fileRef);
+  }
+
+  const _maybeRenderUploadingOverlay = () => {
+    if (uploading) {
+      return (
+        <View style={styles.uploadingOverlay}>
+          <ActivityIndicator size="large" color={colors.green} />
+        </View>
+      );
+    }
   };
 
   return (
@@ -61,7 +139,7 @@ const ConfirmDetails = ({ route }) => {
           </Text>
 
           <Text style={styles.label}>Location:</Text>
-          <Text style={styles.value}>{eventDetails?.location?.address}</Text>
+          <Text style={styles.value}>{eventDetails?.location}</Text>
 
           <Text style={styles.label}>Description:</Text>
           <Text style={styles.value}>{eventDetails?.description}</Text>
@@ -99,10 +177,15 @@ const ConfirmDetails = ({ route }) => {
 
         <TouchableOpacity
           onPress={onCreateEvent}
-          style={[styles.button, { backgroundColor: colors.button }]}>
-          <Text style={[styles.buttonText, { color: colors.buttonText }]}>
-            Confirm and Create Event
-          </Text>
+          style={[styles.button, { backgroundColor: colors.button }]}
+          disabled={uploading}>
+          {uploading ? (
+            <ActivityIndicator size="large" color={colors.background} />
+          ) : (
+            <Text style={[styles.buttonText, { color: colors.buttonText }]}>
+              Confirm and Create Event
+            </Text>
+          )}
         </TouchableOpacity>
       </ScrollView>
       <SuccessModal
@@ -179,5 +262,14 @@ const styles = StyleSheet.create({
   buttonText: {
     alignSelf: "center",
     fontSize: 16,
+  },
+  uploadingOverlay: {
+    position: "absolute",
+    top: 70,
+    left: 0,
+    right: 10,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

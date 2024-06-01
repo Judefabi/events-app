@@ -10,7 +10,7 @@ import Login from "../Authentication/Login";
 import UserHomeStack from "../User/UserNavigation/UserHomeStack";
 import AdminHomeStack from "../Admin/AdminNavigation/AdminHomeStack";
 import { useNavigation } from "@react-navigation/native";
-import LoadingIndicator from "../../common/LoadingIndicator";
+import MainLoadingIndicator from "../../common/MainIndicator";
 
 const Stack = createNativeStackNavigator();
 
@@ -53,7 +53,7 @@ const AuthStack = () => {
   }, [isFirstLaunch, isAuthenticated, type]);
 
   if (isAuthenticated === undefined) {
-    return <LoadingIndicator />;
+    return <MainLoadingIndicator />;
   }
 
   // console.log(routename);

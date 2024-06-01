@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { colors } from "../../../globals/colors";
@@ -14,17 +15,25 @@ const LocationSearch = ({ route }) => {
   const navigation = useNavigation();
   const { eventDetails } = route.params;
   const [location, setLocation] = useState(null);
-
-  const onConfirmLocation = () => {
-    const updatedEventDetails = { ...eventDetails, location };
-    navigation.navigate("Confirm Details", {
-      eventDetails: updatedEventDetails,
-    });
-  };
+  const [coordinates, setCoordinates] = useState({ lat: "", lng: "" });
 
   const handleLocationSelect = (data, details) => {
     const { lat, lng } = details.geometry.location;
-    setLocation({ lat, lng, address: data.description });
+    setLocation(data.description);
+    setCoordinates({ lat, lng });
+  };
+
+  const onConfirmLocation = () => {
+    if (!location) {
+      Alert.alert("Error", "Please select a location");
+      return;
+    }
+
+    const updatedEventDetails = { ...eventDetails, location, coordinates };
+    // console.log("Updated dets", updatedEventDetails);
+    navigation.navigate("Confirm Details", {
+      eventDetails: updatedEventDetails,
+    });
   };
 
   return (
@@ -45,11 +54,7 @@ const LocationSearch = ({ route }) => {
       />
       {location && (
         <View style={styles.locationDetails}>
-          <Text style={styles.locationText}>
-            Selected Location: {location.address}
-          </Text>
-          {/* <Text style={styles.locationText}>Latitude: {location.lat}</Text>
-          <Text style={styles.locationText}>Longitude: {location.lng}</Text> */}
+          <Text style={styles.locationText}>Selected Location: {location}</Text>
         </View>
       )}
       <TouchableOpacity

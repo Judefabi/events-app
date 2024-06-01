@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Dimensions,
   ScrollView,
@@ -6,8 +7,8 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
-import React, { useState } from "react";
 import { colors } from "../../../globals/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -36,7 +37,25 @@ const AddTickets = () => {
     setTickets(updatedTickets);
   };
 
+  const validateTickets = () => {
+    for (let i = 0; i < tickets.length; i++) {
+      const { name, price, quantity } = tickets[i];
+      if (!name.trim() || !price.trim() || !quantity.trim()) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   const onConfirmDetails = () => {
+    if (!validateTickets()) {
+      Alert.alert(
+        "Error",
+        "Please fill in all ticket information or mark event as free"
+      );
+      return;
+    }
+
     const updatedEventDetails = { ...eventDetails, tickets };
     navigation.navigate("Add Location", {
       eventDetails: updatedEventDetails,
