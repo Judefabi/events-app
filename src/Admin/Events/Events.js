@@ -118,7 +118,8 @@ const styles = StyleSheet.create({
   },
   tabContent: {
     flex: 1,
-    marginTop: 10,
+    paddingTop: 10,
+    backgroundColor: colors.background,
   },
   tabLabel: {
     fontFamily: "bold",
