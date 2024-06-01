@@ -10,6 +10,7 @@ import AuthStack from "./src/MainNavigation/Authstack";
 import { AuthProvider } from "./contexts/authContext";
 import { LocationProvider } from "./contexts/locationContext";
 import { LoadingProvider } from "./contexts/loadingContext";
+import EventsProvider from "./contexts/eventsContext";
 
 const AppContent = () => {
   const { fontsLoaded, fontError } = useFontContext();
@@ -34,21 +35,23 @@ const App = () => {
   return (
     <LocationProvider>
       <AuthProvider>
-        <FontProvider>
-          <LoadingProvider>
-            <View style={{ flex: 1, backgroundColor: colors.background }}>
-              <StatusBar
-                barStyle={
-                  colorScheme === "dark" ? "light-content" : "dark-content"
-                }
-                hidden={false}
-                backgroundColor={colors.line}
-                translucent={true}
-              />
-              <AppContent />
-            </View>
-          </LoadingProvider>
-        </FontProvider>
+        <EventsProvider>
+          <FontProvider>
+            <LoadingProvider>
+              <View style={{ flex: 1, backgroundColor: colors.background }}>
+                <StatusBar
+                  barStyle={
+                    colorScheme === "dark" ? "light-content" : "dark-content"
+                  }
+                  hidden={false}
+                  backgroundColor={colors.line}
+                  translucent={true}
+                />
+                <AppContent />
+              </View>
+            </LoadingProvider>
+          </FontProvider>
+        </EventsProvider>
       </AuthProvider>
     </LocationProvider>
   );

@@ -20,63 +20,54 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useLoading } from "../../../contexts/loadingContext";
 import { doc, setDoc } from "firebase/firestore";
 import { useAuth } from "../../../contexts/authContext";
+import { useEvents } from "../../../contexts/eventsContext";
 
 const ConfirmDetails = ({ route }) => {
   const navigation = useNavigation();
   const { eventDetails } = route.params;
   const { showLoader, hideLoader, showToast } = useLoading();
+  const { onCreateEvent, uploading, modalVisible, setModalVisible } =
+    useEvents();
   const { user } = useAuth(user);
 
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  // const [isModalVisible, setModalVisible] = useState(false);
+  // const [uploading, setUploading] = useState(false);
+
+  const handleCreateEvent = async () => {
+    await onCreateEvent(eventDetails);
+  };
 
   // const onCreateEvent = async () => {
   //   try {
+  //     setUploading(true);
+  //     let uploadUrl = null;
+  //     const eventId = uuidv4();
+
   //     if (eventDetails.image) {
   //       const { image } = eventDetails;
-  //       const uploadUrl = await uploadImageAsync(image);
-  //       console.log(uploadUrl);
+  //       uploadUrl = await uploadImageAsync(image, eventId);
   //     }
+
+  //     const eventData = {
+  //       ...eventDetails,
+  //       image: uploadUrl,
+  //       creatorId: user?.uid,
+  //       creator: user?.email,
+  //       createdAt: new Date(),
+  //     };
+
+  //     const eventDocRef = doc(eventsRef, uuidv4());
+  //     await setDoc(eventDocRef, eventData);
+
+  //     setModalVisible(true);
+  //     // console.log("Event created with details:", eventData);
   //   } catch (e) {
   //     console.log(e);
+  //     alert("Upload failed, sorry :(");
   //   } finally {
   //     setUploading(false);
   //   }
   // };
-
-  // console.log("Event created with details:", user?.email);
-
-  const onCreateEvent = async () => {
-    try {
-      setUploading(true);
-      let uploadUrl = null;
-      const eventId = uuidv4();
-
-      if (eventDetails.image) {
-        const { image } = eventDetails;
-        uploadUrl = await uploadImageAsync(image, eventId);
-      }
-
-      const eventData = {
-        ...eventDetails,
-        image: uploadUrl,
-        creatorId: user?.uid,
-        creator: user?.email,
-        createdAt: new Date(),
-      };
-
-      const eventDocRef = doc(eventsRef, uuidv4());
-      await setDoc(eventDocRef, eventData);
-
-      setModalVisible(true);
-      console.log("Event created with details:", eventData);
-    } catch (e) {
-      console.log(e);
-      alert("Upload failed, sorry :(");
-    } finally {
-      setUploading(false);
-    }
-  };
 
   async function uploadImageAsync(uri, eventId) {
     console.log("received", uri);
@@ -177,7 +168,7 @@ const ConfirmDetails = ({ route }) => {
         </View>
 
         <TouchableOpacity
-          onPress={onCreateEvent}
+          onPress={handleCreateEvent}
           style={[styles.button, { backgroundColor: colors.button }]}
           disabled={uploading}>
           {uploading ? (
@@ -190,7 +181,7 @@ const ConfirmDetails = ({ route }) => {
         </TouchableOpacity>
       </ScrollView>
       <SuccessModal
-        isVisible={isModalVisible}
+        isVisible={modalVisible}
         onClose={() => setModalVisible(false)}
       />
     </View>
