@@ -12,16 +12,21 @@ import {
 } from "react-native";
 import { colors } from "../../../globals/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import events from "../../../models/eventsModel";
-import adminProfile from "../../../models/adminModel";
 import HorizontalCard from "../Components/HorizontalCard";
 import VerticalCard from "../Components/VerticalCard";
 import { useNavigation } from "@react-navigation/native";
+import { useEvents } from "../../../contexts/eventsContext";
+import { useUser } from "../../../contexts/userContext";
+import LoadingSkeleton from "../../../skeletons/Home/home";
+import { useLocation } from "../../../contexts/locationContext";
 
 const Home = () => {
   const navigation = useNavigation();
-  const { name, location, profileImage, email } = adminProfile;
-  const [myEvents, setMyEvents] = useState([]);
+  const { events, loading } = useEvents();
+  const { userProfile } = useUser();
+  const { location, errorMsg } = useLocation();
+
+  // const [myEvents, setMyEvents] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [isSearch, setIsSearch] = useState(false);
 
@@ -33,10 +38,19 @@ const Home = () => {
     });
   };
 
-  useEffect(() => {
-    const fetchedEvents = events.filter((event) => event.creator === email);
-    setMyEvents(fetchedEvents);
-  }, [email]);
+  if (loading || !userProfile) {
+    return <LoadingSkeleton />;
+  }
+
+  // console.log(userProfile);
+
+  const { uid, name, profileImage, email } = userProfile;
+
+  const myEvents = events.filter((event) => event.creatorId === uid);
+  // useEffect(() => {
+  //   const fetchedEvents = events.filter((event) => event.creator === email);
+  //   setMyEvents(fetchedEvents);
+  // }, [email]);
 
   const createEvent = () => {
     navigation.navigate("Create Event");
@@ -52,24 +66,34 @@ const Home = () => {
     });
   };
 
+  const getInitials = (name) => {
+    const nameArray = name?.split(" ");
+    const initials = nameArray.map((n) => n[0]).join("");
+    return initials.toUpperCase();
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.mainContainer}>
         <View style={styles.topView}>
           <View style={styles.topLeft}>
-            <Text style={styles.name}>Hey, {name}</Text>
+            <Text style={styles.name}>Hey, {name?.split(" ")[0] || ""}</Text>
             <View style={styles.locationView}>
               <Ionicons style={styles.locationIcon} name="location-sharp" />
-              <Text style={styles.location}>{location}</Text>
+              {/* <Text style={styles.location}>{location}</Text> */}
             </View>
           </View>
           <View style={styles.profileView}>
-            <Image
-              style={styles.profileImage}
-              source={{
-                uri: profileImage,
-              }}
-            />
+            {profileImage ? (
+              <Image
+                source={{ uri: profileImage }}
+                style={styles.profileImage}
+              />
+            ) : (
+              <View style={styles.initialsContainer}>
+                <Text style={styles.initialsText}>{getInitials(name)}</Text>
+              </View>
+            )}
           </View>
         </View>
         <View style={styles.searchInputCover}>
@@ -112,9 +136,9 @@ const Home = () => {
             </TouchableOpacity>
           </View>
           <FlatList
-            data={events.slice(0, 8)}
-            renderItem={({ item }) => <VerticalCard event={item} />}
+            data={events?.slice(0, 8)}
             keyExtractor={(item) => item?.id?.toString()}
+            renderItem={({ item }) => <VerticalCard event={item} />}
             contentContainerStyle={styles.flatListTrendingContainer}
             showsVerticalScrollIndicator={false}
           />
@@ -169,6 +193,20 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     borderRadius: 100,
+  },
+  initialsContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 100,
+    backgroundColor: colors.text,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  initialsText: {
+    color: colors.background,
+    fontSize: 16,
+    fontWeight: "bold",
   },
   searchInputCover: {
     flexDirection: "row",

@@ -6,14 +6,18 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../../globals/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useEvents } from "../../../contexts/eventsContext";
 
 const EventsDetails = ({ route }) => {
   const navigation = useNavigation();
+  const { isCreator } = route?.params;
+  const { deleteEvent, confirmAttending, loading } = useEvents();
 
   const {
     id,
@@ -22,12 +26,10 @@ const EventsDetails = ({ route }) => {
     time,
     location,
     description,
-    imageUrl,
+    image,
     attendees,
     tags,
     tickets,
-    ticketsSold,
-    ticketRanges,
   } = route?.params?.event;
 
   const formatAttendeeCount = (count) => {
@@ -38,6 +40,23 @@ const EventsDetails = ({ route }) => {
     } else {
       return `${(count / 1000).toFixed(0).replace(".0", "")}k`;
     }
+  };
+
+  let ticketsAvailable;
+
+  if (tickets) {
+    ticketsAvailable = tickets?.reduce((total, ticket) => {
+      return total + parseInt(ticket.quantity, 10);
+    }, 0);
+  }
+
+  const onDeleteEvent = async (id) => {
+    await deleteEvent(id);
+    navigation.navigate("Home");
+  };
+
+  const onConfirmAttending = async () => {
+    await confirmAttending(route.params.event);
   };
 
   return (
@@ -54,22 +73,23 @@ const EventsDetails = ({ route }) => {
               <Text style={styles.name}>{name}</Text>
               <Text>@ {location}</Text>
             </View>
-            <View style={styles.editView}>
-              {/* <Ionicons name="pencil" style={styles.editIcon} /> */}
-              <Text style={styles.editEventText}>Edit Event</Text>
-            </View>
+            {isCreator && (
+              <View style={styles.editView}>
+                <Text style={styles.editEventText}>Edit Event</Text>
+              </View>
+            )}
           </View>
           <View style={styles.topViewDetails}>
             <View style={styles.schedulingDetailsView}>
               <Text style={styles.scheduleText}>
                 {date} <Text style={styles.strokes}>/</Text> {time}
                 <Text style={styles.strokes}> /</Text>{" "}
-                {formatAttendeeCount(attendees.length)}{" "}
+                {formatAttendeeCount(attendees?.length)}{" "}
                 <Ionicons name="people" size={16} /> attending
               </Text>
             </View>
             <View style={styles.attendeesContainer}>
-              {attendees.slice(0, 4).map((attendee, index) => (
+              {attendees?.slice(0, 4).map((attendee, index) => (
                 <React.Fragment key={attendee.id}>
                   <Image
                     source={{ uri: attendee.image }}
@@ -84,7 +104,7 @@ const EventsDetails = ({ route }) => {
           </View>
         </View>
         <View style={styles.imageView}>
-          <Image style={styles.image} source={{ uri: imageUrl }} />
+          <Image style={styles.image} source={{ uri: image }} />
         </View>
         <View style={styles.descriptionView}>
           <Text style={styles.descriptionTitle}>DESCRIPTION</Text>
@@ -92,7 +112,7 @@ const EventsDetails = ({ route }) => {
         </View>
         <View style={styles.eventTagsView}>
           {tags &&
-            tags.map((tag, index) => (
+            tags?.map((tag, index) => (
               <View style={styles.tagPill} key={index}>
                 <Text style={styles.tagPillText}>{tag}</Text>
               </View>
@@ -106,23 +126,33 @@ const EventsDetails = ({ route }) => {
         <View style={styles.firstPartView}>
           <View style={styles.ticketPriceView}>
             <Text style={styles.ticketDenom}>KES.</Text>
-            <Text style={styles.ticketPrice}>{ticketRanges[0].price}</Text>
-            <Text style={styles.ticketDeligation}>
-              / {ticketRanges[0].type}
-            </Text>
+            <Text style={styles.ticketPrice}>{tickets[0].price}</Text>
+            <Text style={styles.ticketDeligation}>/ {tickets[0].name}</Text>
           </View>
           <View style={styles.ticketsNumberView}>
-            <Text style={styles.ticketRemainingNumber}>
-              {tickets - ticketsSold}
-            </Text>
+            <Text style={styles.ticketRemainingNumber}>{ticketsAvailable}</Text>
             <Text style={styles.ticketNumber}>
-              /{tickets} tickets remaining
+              /{tickets[0]?.quantity} tickets remaining
             </Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.ticketsButton}>
-          <Text style={styles.ticketsButtonText}>Get Ticket</Text>
-        </TouchableOpacity>
+        {isCreator ? (
+          <TouchableOpacity
+            onPress={() => onDeleteEvent(id)}
+            style={[styles.ticketsButton, { backgroundColor: colors.red }]}>
+            {loading ? (
+              <ActivityIndicator size="small" color={colors.background} />
+            ) : (
+              <Text style={styles.ticketsButtonText}>Delete Event</Text>
+            )}
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={onConfirmAttending}
+            style={styles.ticketsButton}>
+            <Text style={styles.ticketsButtonText}>Confirm Attending</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

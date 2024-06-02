@@ -4,16 +4,28 @@ import HorizontalCard from "../Components/HorizontalCard";
 import fevents from "../../../models/eventsModel";
 import adminProfile from "../../../models/adminModel";
 import { colors } from "../../../globals/colors";
+import { useEvents } from "../../../contexts/eventsContext";
+import { useUser } from "../../../contexts/userContext";
+import MainLoadingIndicator from "../../../common/MainIndicator";
 
 const Feed = () => {
-  const { email } = adminProfile;
+  const { events, loading } = useEvents();
+  const { userProfile } = useUser();
   //TODO:: Consider using id instead of email
-  const [myEvents, setMyEvents] = useState([]);
+  // const [myEvents, setMyEvents] = useState([]);
 
-  useEffect(() => {
-    const fetchedEvents = fevents.filter((event) => event.creator === email);
-    setMyEvents(fetchedEvents);
-  }, [email]);
+  // useEffect(() => {
+  //   const fetchedEvents = fevents.filter((event) => event.creator === email);
+  //   setMyEvents(fetchedEvents);
+  // }, [email]);
+
+  if (loading || !userProfile) {
+    return <MainLoadingIndicator />;
+  }
+
+  const { uid } = userProfile;
+
+  const myEvents = events.filter((event) => event.creatorId === uid);
 
   return (
     <ScrollView style={styles.container}>

@@ -10,11 +10,25 @@ import React from "react";
 import { colors } from "../../../globals/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import { useUser } from "../../../contexts/userContext";
 
 const VerticalCard = ({ event }) => {
   const navigation = useNavigation();
-  const { id, name, date, time, location, description, imageUrl, attendees } =
-    event;
+  const { userProfile } = useUser();
+
+  const {
+    id,
+    creatorId,
+    name,
+    date,
+    time,
+    location,
+    description,
+    image,
+    attendees,
+  } = event;
+
+  const isCreator = userProfile?.uid === creatorId;
 
   const formatAttendeeCount = (count) => {
     if (count < 1000) {
@@ -29,14 +43,21 @@ const VerticalCard = ({ event }) => {
   const onDetails = () => {
     navigation.navigate("Event Details", {
       event: event,
+      isCreator,
     });
+  };
+
+  const getInitials = (name) => {
+    const nameArray = name.split(" ");
+    const initials = nameArray.map((n) => n[0]).join("");
+    return initials.toUpperCase();
   };
 
   return (
     <TouchableOpacity onPress={onDetails} style={styles.card}>
       <View style={styles.cardInnerView}>
         <View style={styles.imageView}>
-          <Image style={styles.eventImage} source={{ uri: imageUrl }} />
+          <Image style={styles.eventImage} source={{ uri: image }} />
         </View>
       </View>
       <View style={styles.secondPart}>
@@ -57,12 +78,20 @@ const VerticalCard = ({ event }) => {
           </View>
         </View>
         <View style={styles.attendeesContainer}>
-          {attendees.slice(0, 2).map((attendee, index) => (
-            <React.Fragment key={attendee.id}>
-              <Image
-                source={{ uri: attendee.image }}
-                style={[styles.attendeeImage, { marginLeft: -15 }]}
-              />
+          {attendees?.slice(0, 2).map((attendee, index) => (
+            <React.Fragment key={index}>
+              {attendee.image ? (
+                <Image
+                  source={{ uri: attendee.image }}
+                  style={[styles.attendeeImage, { marginLeft: -15 }]}
+                />
+              ) : (
+                <View style={[styles.attendeeInitials, { marginLeft: -15 }]}>
+                  <Text style={styles.initialsText}>
+                    {getInitials(attendee.name)}
+                  </Text>
+                </View>
+              )}
               {index === 1 && attendees.length > 2 && (
                 <View style={[styles.moreAttendeesView, { marginLeft: -15 }]}>
                   <Text style={[styles.moreAttendeesText]}>
@@ -140,6 +169,20 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 3,
     borderColor: colors.background,
+  },
+  attendeeInitials: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.text,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 3,
+    borderColor: colors.grey,
+  },
+  initialsText: {
+    color: colors.background,
+    fontWeight: "bold",
   },
   moreAttendeesView: {
     backgroundColor: colors.background,

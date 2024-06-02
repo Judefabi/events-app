@@ -27,6 +27,7 @@ const EventsDetails = ({ route }) => {
   const navigation = useNavigation();
   const { confirmAttending, confirming } = useEvents();
   const { attending } = route.params;
+  const [isAttending, setIsAttending] = useState(attending);
 
   const {
     id,
@@ -51,16 +52,17 @@ const EventsDetails = ({ route }) => {
     }
   };
 
-  let ticketAvailable;
+  let ticketsAvailable;
 
   if (tickets) {
-    ticketAvailable = tickets?.reduce((total, ticket) => {
+    ticketsAvailable = tickets?.reduce((total, ticket) => {
       return total + parseInt(ticket.quantity, 10);
     }, 0);
   }
 
   const onConfirmAttending = async () => {
     await confirmAttending(route.params.event);
+    setIsAttending(true);
   };
 
   const viewTicket = () => {};
@@ -139,20 +141,20 @@ const EventsDetails = ({ route }) => {
         </View>
       </ScrollView>
       <View style={styles.ticketsView}>
-        <View style={styles.firstPartView}>
+        <View style={styles.isAttendingPartView}>
           <View style={styles.ticketPriceView}>
             <Text style={styles.ticketDenom}>KES.</Text>
             <Text style={styles.ticketPrice}>{tickets[0]?.price}</Text>
             <Text style={styles.ticketDeligation}>/ {tickets[0]?.name}</Text>
           </View>
           <View style={styles.ticketsNumberView}>
-            <Text style={styles.ticketRemainingNumber}>{ticketAvailable}</Text>
+            <Text style={styles.ticketRemainingNumber}>{ticketsAvailable}</Text>
             <Text style={styles.ticketNumber}>
               / {tickets[0]?.quantity} tickets remaining
             </Text>
           </View>
         </View>
-        {!attending ? (
+        {!isAttending ? (
           <TouchableOpacity
             onPress={onConfirmAttending}
             style={styles.ticketsButton}>
@@ -309,7 +311,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  firstPartView: {},
+  isAttendingPartView: {},
   ticketPriceView: {
     flexDirection: "row",
     paddingVertical: 5,

@@ -10,12 +10,25 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../../globals/colors";
+import { useUser } from "../../../contexts/userContext";
 
 const HorizontalCard = ({ event, feed }) => {
   const navigation = useNavigation();
+  const { userProfile } = useUser();
 
-  const { id, name, date, time, location, description, imageUrl, attendees } =
-    event;
+  const {
+    id,
+    creatorId,
+    name,
+    date,
+    time,
+    location,
+    description,
+    image,
+    attendees,
+  } = event;
+
+  const isCreator = userProfile?.uid === creatorId;
 
   const formatAttendeeCount = (count) => {
     if (count < 1000) {
@@ -30,6 +43,7 @@ const HorizontalCard = ({ event, feed }) => {
   const onDetails = () => {
     navigation.navigate("Event Details", {
       event: event,
+      isCreator,
     });
   };
 
@@ -45,7 +59,7 @@ const HorizontalCard = ({ event, feed }) => {
         feed ? { width: Dimensions.get("window").width * 0.9 } : null,
       ]}>
       <View style={styles.cardInnerView}>
-        <Image style={styles.eventImage} source={{ uri: imageUrl }} />
+        <Image style={styles.eventImage} source={{ uri: image }} />
       </View>
       <View style={styles.eventsDetailsView}>
         <Text style={styles.eventTitle}>{name}</Text>
