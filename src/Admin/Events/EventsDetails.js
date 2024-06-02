@@ -17,7 +17,7 @@ import { useEvents } from "../../../contexts/eventsContext";
 const EventsDetails = ({ route }) => {
   const navigation = useNavigation();
   const { isCreator } = route?.params;
-  const { deleteEvent, confirmAttending, loading } = useEvents();
+  const { deleteEvent, confirmAttending, loading, confirming } = useEvents();
   const { attending } = route.params;
   const [isAttending, setIsAttending] = useState(attending);
 
@@ -149,11 +149,24 @@ const EventsDetails = ({ route }) => {
               <Text style={styles.ticketsButtonText}>Delete Event</Text>
             )}
           </TouchableOpacity>
+        ) : !isCreator && isAttending ? (
+          <TouchableOpacity
+            onPress={viewTicket}
+            style={[styles.ticketsButton, { backgroundColor: colors.green }]}>
+            <Text
+              style={[styles.ticketsButtonText, { color: colors.background }]}>
+              View Your Ticket
+            </Text>
+          </TouchableOpacity>
         ) : (
           <TouchableOpacity
             onPress={onConfirmAttending}
             style={styles.ticketsButton}>
-            <Text style={styles.ticketsButtonText}>Confirm Attending</Text>
+            {confirming ? (
+              <ActivityIndicator size="small" color={colors.background} />
+            ) : (
+              <Text style={styles.ticketsButtonText}>Confirm Attending</Text>
+            )}
           </TouchableOpacity>
         )}
       </View>
