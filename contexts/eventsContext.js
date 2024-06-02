@@ -2,16 +2,16 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   doc,
   setDoc,
-  collection,
-  getFirestore,
-  getDoc,
   getDocs,
+  updateDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { useAuth } from "./authContext";
 import { eventsRef } from "../firebaseConfig";
+import { useUser } from "./userContext";
 
 const EventsContext = createContext();
 
@@ -22,12 +22,17 @@ const EventsProvider = ({ children }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
   const storage = getStorage();
   const { user } = useAuth();
+  const { userProfile, loading: userLoading } = useUser();
+
+  useEffect(() => {
+    console.log("profile", userProfile);
+  }, [userProfile]);
 
   const uploadImageAsync = async (uri, eventId) => {
-    console.log("received", uri);
     setUploading(true);
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -72,7 +77,6 @@ const EventsProvider = ({ children }) => {
       await setDoc(eventDocRef, eventData);
 
       setModalVisible(true);
-      //   console.log("Event created with details:", eventData);
     } catch (e) {
       console.log(e);
       alert("Event creation failed, sorry :(");
@@ -90,17 +94,52 @@ const EventsProvider = ({ children }) => {
         ...doc.data(),
       }));
       setEvents(fetchedEvents);
-      setLoading(false);
     } catch (e) {
       console.log(e);
-      setLoading(False);
-      //   alert("Failed to fetch events, sorry :(");
+      alert("Failed to fetch events, sorry :(");
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchEvents();
   }, []);
+
+  const confirmAttending = async (event) => {
+    if (userLoading || !userProfile) {
+      console.log("User profile is still loading or not available.");
+      return;
+    }
+
+    setConfirming(true);
+    const { id, name, date, time, location, description, image, tickets } =
+      event;
+
+    try {
+      const userId = userProfile.uid;
+      const userDocRef = doc(eventsRef, id);
+
+      await updateDoc(userDocRef, {
+        attendees: arrayUnion({
+          userId: userId,
+          name: userProfile.name,
+          email: userProfile.email,
+          image: userProfile?.photoURL || "",
+        }),
+      });
+
+      setEvents((prevEvents) =>
+        prevEvents.map((evt) =>
+          evt.id === id ? { ...evt, attending: true } : evt
+        )
+      );
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setConfirming(false);
+    }
+  };
 
   return (
     <EventsContext.Provider
@@ -112,6 +151,8 @@ const EventsProvider = ({ children }) => {
         fetchEvents,
         events,
         loading,
+        confirmAttending,
+        confirming,
       }}>
       {children}
     </EventsContext.Provider>

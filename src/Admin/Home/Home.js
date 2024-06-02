@@ -97,7 +97,7 @@ const Home = () => {
             horizontal
             data={myEvents}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item?.id?.toString()}
             snapToInterval={Dimensions.get("window").width * 0.8}
             decelerationRate="fast"
             contentContainerStyle={styles.flatListContentContainer}
@@ -114,7 +114,7 @@ const Home = () => {
           <FlatList
             data={events.slice(0, 8)}
             renderItem={({ item }) => <VerticalCard event={item} />}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item?.id?.toString()}
             contentContainerStyle={styles.flatListTrendingContainer}
             showsVerticalScrollIndicator={false}
           />

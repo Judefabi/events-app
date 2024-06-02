@@ -36,10 +36,10 @@ const App = () => {
   return (
     <LocationProvider>
       <AuthProvider>
-        <EventsProvider>
-          <FontProvider>
-            <LoadingProvider>
-              <UserProvider>
+        <UserProvider>
+          <EventsProvider>
+            <FontProvider>
+              <LoadingProvider>
                 <View style={{ flex: 1, backgroundColor: colors.background }}>
                   <StatusBar
                     barStyle={
@@ -51,10 +51,10 @@ const App = () => {
                   />
                   <AppContent />
                 </View>
-              </UserProvider>
-            </LoadingProvider>
-          </FontProvider>
-        </EventsProvider>
+              </LoadingProvider>
+            </FontProvider>
+          </EventsProvider>
+        </UserProvider>
       </AuthProvider>
     </LocationProvider>
   );

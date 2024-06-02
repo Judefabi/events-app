@@ -38,6 +38,12 @@ const HorizontalCard = ({ event, attending }) => {
     console.log("confirmed", id);
   };
 
+  const getInitials = (name) => {
+    const nameArray = name.split(" ");
+    const initials = nameArray.map((n) => n[0]).join("");
+    return initials.toUpperCase();
+  };
+
   return (
     <TouchableOpacity
       onPress={onDetails}
@@ -65,18 +71,26 @@ const HorizontalCard = ({ event, attending }) => {
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
-              onPress={() => onConfirmAttending(id)}
+              onPress={() => onDetails(id)}
               style={styles.joinEventButtonView}>
               <Text style={styles.joinEventButtonText}>Confirm Attending</Text>
             </TouchableOpacity>
           )}
           <View style={styles.attendeesContainer}>
             {attendees?.slice(0, 3).map((attendee, index) => (
-              <React.Fragment key={attendee.id}>
-                <Image
-                  source={{ uri: attendee.image }}
-                  style={[styles.attendeeImage, { marginLeft: -15 }]}
-                />
+              <React.Fragment key={index}>
+                {attendee.image ? (
+                  <Image
+                    source={{ uri: attendee.image }}
+                    style={[styles.attendeeImage, { marginLeft: -15 }]}
+                  />
+                ) : (
+                  <View style={[styles.attendeeInitials, { marginLeft: -15 }]}>
+                    <Text style={styles.initialsText}>
+                      {getInitials(attendee.name)}
+                    </Text>
+                  </View>
+                )}
                 {index === 2 && attendees.length > 3 && (
                   <View style={[styles.moreAttendeesView, { marginLeft: -15 }]}>
                     <Text style={[styles.moreAttendeesText]}>
@@ -164,9 +178,22 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: colors.background,
   },
+  attendeeInitials: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.text,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 3,
+    borderColor: colors.background,
+  },
+  initialsText: {
+    color: colors.background,
+    fontWeight: "bold",
+  },
   moreAttendeesView: {
     backgroundColor: colors.background,
-    // width: 32,
     height: 32,
     borderRadius: 16,
     justifyContent: "center",
@@ -175,7 +202,6 @@ const styles = StyleSheet.create({
   moreAttendeesText: {
     fontWeight: "bold",
     color: colors.text,
-    // fontSize: 20,
     paddingHorizontal: 10,
   },
   eventsDetailsView: {

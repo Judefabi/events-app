@@ -33,8 +33,14 @@ const VerticalCard = ({ event, attending }) => {
     });
   };
 
+  const getInitials = (name) => {
+    const nameArray = name.split(" ");
+    const initials = nameArray.map((n) => n[0]).join("");
+    return initials.toUpperCase();
+  };
+
   return (
-    <TouchableOpacity onPress={onDetails} style={styles.card}>
+    <TouchableOpacity key={id} onPress={onDetails} style={styles.card}>
       <View style={styles.cardInnerView}>
         <View style={styles.imageView}>
           <Image style={styles.eventImage} source={{ uri: image }} />
@@ -58,16 +64,24 @@ const VerticalCard = ({ event, attending }) => {
           </View>
         </View>
         <View style={styles.attendeesContainer}>
-          {attendees?.slice(0, 2).map((attendee, index) => (
-            <React.Fragment key={attendee.id}>
-              <Image
-                source={{ uri: attendee.image }}
-                style={[styles.attendeeImage, { marginLeft: -15 }]}
-              />
-              {index === 1 && attendees.length > 2 && (
+          {attendees?.slice(0, 3).map((attendee, index) => (
+            <React.Fragment key={index}>
+              {attendee.image ? (
+                <Image
+                  source={{ uri: attendee.image }}
+                  style={[styles.attendeeImage, { marginLeft: -15 }]}
+                />
+              ) : (
+                <View style={[styles.attendeeInitials, { marginLeft: -15 }]}>
+                  <Text style={styles.initialsText}>
+                    {getInitials(attendee.name)}
+                  </Text>
+                </View>
+              )}
+              {index === 2 && attendees.length > 3 && (
                 <View style={[styles.moreAttendeesView, { marginLeft: -15 }]}>
                   <Text style={[styles.moreAttendeesText]}>
-                    {formatAttendeeCount(attendees.length - 2)}
+                    {formatAttendeeCount(attendees.length - 3)}
                   </Text>
                 </View>
               )}
@@ -141,6 +155,20 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 3,
     borderColor: colors.background,
+  },
+  attendeeInitials: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.text,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 3,
+    borderColor: colors.grey,
+  },
+  initialsText: {
+    color: colors.background,
+    fontWeight: "bold",
   },
   moreAttendeesView: {
     backgroundColor: colors.background,
