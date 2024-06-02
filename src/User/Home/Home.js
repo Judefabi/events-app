@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import moment from "moment";
 import LoadingSkeleton from "../../../skeletons/Home/home";
-import userProfile from "../../../models/userModel";
 import { colors } from "../../../globals/colors";
 import fevents from "../../../models/eventsModel";
 import HorizontalCard from "../Components/HorizontalCard";
@@ -19,17 +18,12 @@ import VerticalCard from "../Components/VerticalCard";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useEvents } from "../../../contexts/eventsContext";
+import { useUser } from "../../../contexts/userContext";
 
 const Home = () => {
-  // const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
-  const { name, location, profileImage } = userProfile;
-  // const [events, setEvents] = useState(fevents);
-
   const { events, loading } = useEvents();
-
-  // console.log("events", events);
-
+  const { userProfile } = useUser();
   const [searchInput, setSearchInput] = useState("");
   const [isSearch, setIsSearch] = useState(false);
   const [isToday, setIsToday] = useState(true);
@@ -53,9 +47,13 @@ const Home = () => {
     },
   ];
 
-  if (loading) {
+  if (loading || !userProfile) {
     return <LoadingSkeleton />;
   }
+
+  // console.log(userProfile);
+
+  const { name, location, profileImage } = userProfile;
 
   const NoEventsHorizontalCard = () => (
     <View style={[styles.horizontalCard, styles.placeholderCard]}>
@@ -105,23 +103,30 @@ const Home = () => {
     // setIsSearch(false);
   };
 
+  const getInitials = (name) => {
+    const nameArray = name?.split(" ");
+    const initials = nameArray.map((n) => n[0]).join("");
+    return initials.toUpperCase();
+  };
+
   return (
     <ScrollView style={styles.mainContainer}>
       <View style={styles.topView}>
         <View style={styles.topLeft}>
-          <Text style={styles.name}>Hey, {name}</Text>
+          <Text style={styles.name}>Hey, {name?.split(" ")[0] || ""}</Text>
           <View style={styles.locationView}>
             <Ionicons style={styles.locationIcon} name="location-sharp" />
             <Text style={styles.location}>{location}</Text>
           </View>
         </View>
         <View style={styles.profileView}>
-          <Image
-            style={styles.profileImage}
-            source={{
-              uri: profileImage,
-            }}
-          />
+          {profileImage ? (
+            <Image source={{ uri: profileImage }} style={styles.profileImage} />
+          ) : (
+            <View style={styles.initialsContainer}>
+              <Text style={styles.initialsText}>{getInitials(name)}</Text>
+            </View>
+          )}
         </View>
       </View>
       <View style={styles.searchInputCover}>
@@ -147,7 +152,7 @@ const Home = () => {
                 key={index}
                 style={styles.popularPill}
                 onPress={() => handlePopularSearchPress(popular)}>
-                <Text style={styles.popularPillText}>{popular.name}</Text>
+                <Text style={styles.popularPillText}>{popular?.name}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -257,6 +262,20 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     borderRadius: 100,
+  },
+  initialsContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 100,
+    backgroundColor: colors.text,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  initialsText: {
+    color: colors.background,
+    fontSize: 16,
+    fontWeight: "bold",
   },
   searchInputCover: {
     flexDirection: "row",
