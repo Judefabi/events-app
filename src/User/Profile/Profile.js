@@ -10,19 +10,25 @@ import {
 } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import userProfile from "../../../models/userModel";
+import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../../globals/colors";
 import { useAuth } from "../../../contexts/authContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
+import { useUser } from "../../../contexts/userContext";
 
 const Tab = createMaterialTopTabNavigator();
 
 const Profile = () => {
   const navigation = useNavigation();
+  const { userProfile } = useUser();
+  const { logout } = useAuth();
+
+  if (!userProfile) {
+    return null;
+  }
+
   const { name, email, profileImage, bio, location, interests, socialLinks } =
     userProfile;
-  const { logout } = useAuth();
 
   const onLogOut = async () => {
     const response = await logout();
@@ -44,16 +50,28 @@ const Profile = () => {
     });
   };
 
+  const getInitials = (name) => {
+    const nameArray = name.split(" ");
+    const initials = nameArray.map((n) => n[0]).join("");
+    return initials.toUpperCase();
+  };
+
   return (
     <ScrollView style={styles.mainContainer}>
       <View style={styles.profileHeader}>
-        <Image source={{ uri: profileImage }} style={styles.profileImage} />
+        {profileImage ? (
+          <Image source={{ uri: profileImage }} style={styles.profileImage} />
+        ) : (
+          <View style={styles.initialsContainer}>
+            <Text style={styles.initialsText}>{getInitials(name)}</Text>
+          </View>
+        )}
         <Text style={styles.profileName}>{name}</Text>
         <Text style={styles.profileEmail}>{email}</Text>
         <Text style={styles.profileLocation}>{location}</Text>
         <Text style={styles.profileBio}>{bio}</Text>
         <View style={styles.interestsContainer}>
-          {interests.map((interest, index) => (
+          {interests?.map((interest, index) => (
             <Text key={index} style={styles.interest}>
               {interest}
             </Text>
@@ -101,6 +119,20 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     marginBottom: 10,
+  },
+  initialsContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: colors.text,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  initialsText: {
+    color: colors.background,
+    fontSize: 30,
+    fontWeight: "bold",
   },
   profileName: {
     fontSize: 24,
