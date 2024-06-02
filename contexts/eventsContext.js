@@ -28,10 +28,6 @@ const EventsProvider = ({ children }) => {
   const { user } = useAuth();
   const { userProfile, loading: userLoading } = useUser();
 
-  useEffect(() => {
-    console.log("profile", userProfile);
-  }, [userProfile]);
-
   const uploadImageAsync = async (uri, eventId) => {
     setUploading(true);
     const blob = await new Promise((resolve, reject) => {

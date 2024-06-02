@@ -2,14 +2,24 @@ import React from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import HorizontalCard from "../Components/HorizontalCard";
 import fevents from "../../../models/eventsModel";
-import userProfile from "../../../models/userModel";
 import { colors } from "../../../globals/colors";
+import { useUser } from "../../../contexts/userContext";
+import { useEvents } from "../../../contexts/eventsContext";
+import MainLoadingIndicator from "../../../common/MainIndicator";
 
 const Feed = () => {
-  const { id } = userProfile;
+  const { userProfile } = useUser();
+
+  // console.log("id", userProfile);
+  const { events, loading } = useEvents();
+
+  if (loading || !userProfile?.uid) {
+    return <MainLoadingIndicator />;
+  }
+
   // Filter events where the user is confirmed to attend
-  const confirmedEvents = fevents.filter((event) =>
-    event.attendees.some((attendee) => attendee.id === id)
+  const confirmedEvents = events.filter((event) =>
+    event?.attendees?.some((attendee) => attendee.userId === userProfile?.uid)
   );
 
   return (

@@ -25,12 +25,8 @@ import { useEvents } from "../../../contexts/eventsContext";
 
 const EventsDetails = ({ route }) => {
   const navigation = useNavigation();
-  const { userProfile } = useUser();
   const { confirmAttending, confirming } = useEvents();
-
-  // console.log(userProfile);
-  // route.params.event.attending = false;
-  // const [confirming, setConfirming] = useState(false);
+  const { attending } = route.params;
 
   const {
     id,
@@ -43,7 +39,6 @@ const EventsDetails = ({ route }) => {
     attendees,
     tags,
     tickets,
-    attending,
   } = route?.params?.event;
 
   const formatAttendeeCount = (count) => {
@@ -66,47 +61,6 @@ const EventsDetails = ({ route }) => {
 
   const onConfirmAttending = async () => {
     await confirmAttending(route.params.event);
-
-    // setConfirming(true);
-    // // Add event to user's attending subcollection
-    // try {
-    //   const userId = userProfile.uid;
-    //   const userDocRef = doc(userRef, userId);
-    //   const eventDocRef = doc(eventsRef, id);
-
-    //   // Add event to user's attending subcollection
-    //   await setDoc(doc(collection(userDocRef, "attendingEvents"), id), {
-    //     eventId: id,
-    //     name: name,
-    //     date: date,
-    //     time: time,
-    //     location: location,
-    //     description: description,
-    //     image: image,
-    //     tickets: tickets,
-    //   });
-
-    //   // Add user to event's attendees subcollection
-    //   await setDoc(doc(collection(eventDocRef, "attendees"), userId), {
-    //     userId: userId,
-    //     name: userProfile.name,
-    //     email: userProfile.email,
-    //     image: userProfile?.photoURL || "",
-    //     // tickets: tickets,
-    //   });
-
-    //   // Optionally, update the event's attendee count
-    //   await updateDoc(eventDocRef, {
-    //     attendees: arrayUnion(userId),
-    //   });
-
-    //   // Optionally, update the local state
-    //   route.params.event.attending = true;
-    // } catch (error) {
-    //   console.log(error);
-    // } finally {
-    //   setConfirming(false);
-    // }
   };
 
   const viewTicket = () => {};

@@ -17,7 +17,7 @@ const Stack = createNativeStackNavigator();
 const AuthStack = () => {
   const navigation = useNavigation();
   const [isFirstLaunch, setIsFirstLaunch] = useState(null);
-  const { isAuthenticated, type, loading } = useAuth(); // Assume loading is a state in your auth context
+  const { isAuthenticated, type, loading } = useAuth();
 
   useEffect(() => {
     const checkFirstLaunch = async () => {
@@ -36,7 +36,6 @@ const AuthStack = () => {
   }, []);
 
   useEffect(() => {
-    console.log(isAuthenticated);
     if (isAuthenticated === undefined) return;
 
     if (isFirstLaunch) {
@@ -71,5 +70,3 @@ const AuthStack = () => {
 };
 
 export default AuthStack;
-
-const styles = StyleSheet.create({});

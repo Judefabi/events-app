@@ -10,12 +10,18 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../../globals/colors";
+import { useUser } from "../../../contexts/userContext";
 
-const HorizontalCard = ({ event, attending }) => {
+const HorizontalCard = ({ event }) => {
   const navigation = useNavigation();
+  const { userProfile } = useUser();
 
   const { id, name, date, time, location, description, image, attendees } =
     event;
+
+  const attending = attendees?.some(
+    (attendee) => attendee.userId === userProfile?.uid
+  );
 
   const formatAttendeeCount = (count) => {
     if (count < 1000) {
