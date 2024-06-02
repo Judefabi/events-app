@@ -30,6 +30,10 @@ const VerticalCard = ({ event }) => {
 
   const isCreator = userProfile?.uid === creatorId;
 
+  const attending = attendees?.some(
+    (attendee) => attendee.userId === userProfile?.uid
+  );
+
   const formatAttendeeCount = (count) => {
     if (count < 1000) {
       return `+${count}`;
@@ -44,6 +48,7 @@ const VerticalCard = ({ event }) => {
     navigation.navigate("Event Details", {
       event: event,
       isCreator,
+      attending,
     });
   };
 

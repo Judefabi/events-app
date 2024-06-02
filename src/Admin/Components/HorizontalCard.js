@@ -44,8 +44,13 @@ const HorizontalCard = ({ event, feed }) => {
     navigation.navigate("Event Details", {
       event: event,
       isCreator,
+      attending,
     });
   };
+
+  const attending = attendees?.some(
+    (attendee) => attendee.userId === userProfile?.uid
+  );
 
   const onConfirmAttending = (id) => {
     console.log("confirmed", id);

@@ -18,6 +18,8 @@ const EventsDetails = ({ route }) => {
   const navigation = useNavigation();
   const { isCreator } = route?.params;
   const { deleteEvent, confirmAttending, loading } = useEvents();
+  const { attending } = route.params;
+  const [isAttending, setIsAttending] = useState(attending);
 
   const {
     id,
@@ -57,6 +59,7 @@ const EventsDetails = ({ route }) => {
 
   const onConfirmAttending = async () => {
     await confirmAttending(route.params.event);
+    setIsAttending(true);
   };
 
   return (
