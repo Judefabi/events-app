@@ -22,13 +22,20 @@ const Events = ({ route }) => {
   const { myEvents, events, search } = route.params;
   const [searchInput, setSearchInput] = useState(search || "");
 
-  const filteredMyEvents = myEvents?.filter((event) =>
-    event?.name?.toLowerCase().includes(searchInput.toLowerCase())
-  );
+  const filterEvents = (events) => {
+    return events?.filter((event) => {
+      const nameMatches = event?.name
+        ?.toLowerCase()
+        .includes(searchInput.toLowerCase());
+      const tagMatches = event?.tags?.some((tag) =>
+        tag.toLowerCase().includes(searchInput.toLowerCase())
+      );
+      return nameMatches || tagMatches;
+    });
+  };
 
-  const filteredTrendingEvents = events?.filter((event) =>
-    event?.name?.toLowerCase().includes(searchInput.toLowerCase())
-  );
+  const filteredMyEvents = filterEvents(myEvents);
+  const filteredTrendingEvents = filterEvents(events);
 
   const MyEventsScreen = () => (
     <View style={styles.tabContent}>
