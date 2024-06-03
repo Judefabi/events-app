@@ -40,6 +40,7 @@ const EventsDetails = ({ route }) => {
     attendees,
     tags,
     tickets,
+    isFreeEvent,
   } = route?.params?.event;
 
   const formatAttendeeCount = (count) => {
@@ -88,12 +89,14 @@ const EventsDetails = ({ route }) => {
               <Text style={styles.scheduleText}>
                 {date} <Text style={styles.strokes}>/</Text> {time}
                 <Text style={styles.strokes}> /</Text>{" "}
-                {attendees && formatAttendeeCount(attendees?.length)}{" "}
+                {attendees?.length > 0
+                  ? formatAttendeeCount(attendees?.length)
+                  : "0"}
                 <Ionicons name="people" size={16} /> attending
               </Text>
             </View>
             <View style={styles.attendeesContainer}>
-              {attendees?.slice(0, 3).map((attendee, index) => (
+              {attendees?.slice(0, 4).map((attendee, index) => (
                 <React.Fragment key={index}>
                   {attendee.image ? (
                     <Image
@@ -105,14 +108,6 @@ const EventsDetails = ({ route }) => {
                       style={[styles.attendeeInitials, { marginLeft: -15 }]}>
                       <Text style={styles.initialsText}>
                         {getInitials(attendee.name)}
-                      </Text>
-                    </View>
-                  )}
-                  {index === 2 && attendees.length > 3 && (
-                    <View
-                      style={[styles.moreAttendeesView, { marginLeft: -15 }]}>
-                      <Text style={[styles.moreAttendeesText]}>
-                        {formatAttendeeCount(attendees.length - 3)}
                       </Text>
                     </View>
                   )}
@@ -128,31 +123,45 @@ const EventsDetails = ({ route }) => {
           <Text style={styles.descriptionTitle}>DESCRIPTION</Text>
           <Text style={styles.description}>{description}</Text>
         </View>
-        <View style={styles.eventTagsView}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.eventTagsView}>
           {tags &&
             tags?.map((tag, index) => (
               <View style={styles.tagPill} key={index}>
                 <Text style={styles.tagPillText}>{tag}</Text>
               </View>
             ))}
-        </View>
+        </ScrollView>
+
         <View style={styles.mapView}>
           <Text>Map to go here</Text>
         </View>
       </ScrollView>
       <View style={styles.ticketsView}>
         <View style={styles.isAttendingPartView}>
-          <View style={styles.ticketPriceView}>
-            <Text style={styles.ticketDenom}>KES.</Text>
-            <Text style={styles.ticketPrice}>{tickets[0]?.price}</Text>
-            <Text style={styles.ticketDeligation}>/ {tickets[0]?.name}</Text>
-          </View>
-          <View style={styles.ticketsNumberView}>
-            <Text style={styles.ticketRemainingNumber}>{ticketsAvailable}</Text>
-            <Text style={styles.ticketNumber}>
-              / {tickets[0]?.quantity} tickets remaining
-            </Text>
-          </View>
+          {isFreeEvent ? (
+            <Text style={styles.isAttendingText}>Free Event</Text>
+          ) : (
+            <View>
+              <View style={styles.ticketPriceView}>
+                <Text style={styles.ticketDenom}>KES.</Text>
+                <Text style={styles.ticketPrice}>{tickets[0]?.price}</Text>
+                <Text style={styles.ticketDeligation}>
+                  / {tickets[0]?.name}
+                </Text>
+              </View>
+              <View style={styles.ticketsNumberView}>
+                <Text style={styles.ticketRemainingNumber}>
+                  {ticketsAvailable}
+                </Text>
+                <Text style={styles.ticketNumber}>
+                  / {tickets[0]?.quantity} tickets remaining
+                </Text>
+              </View>
+            </View>
+          )}
         </View>
         {!isAttending ? (
           <TouchableOpacity

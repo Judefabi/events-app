@@ -8,7 +8,7 @@ import {
   ScrollView,
   ActivityIndicator,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../../globals/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -32,6 +32,7 @@ const EventsDetails = ({ route }) => {
     attendees,
     tags,
     tickets,
+    isFreeEvent,
   } = route?.params?.event;
 
   const formatAttendeeCount = (count) => {
@@ -62,6 +63,12 @@ const EventsDetails = ({ route }) => {
     setIsAttending(true);
   };
 
+  const getInitials = (name) => {
+    const nameArray = name.split(" ");
+    const initials = nameArray.map((n) => n[0]).join("");
+    return initials.toUpperCase();
+  };
+
   return (
     <View style={styles.mainContainer}>
       <ScrollView
@@ -87,20 +94,28 @@ const EventsDetails = ({ route }) => {
               <Text style={styles.scheduleText}>
                 {date} <Text style={styles.strokes}>/</Text> {time}
                 <Text style={styles.strokes}> /</Text>{" "}
-                {formatAttendeeCount(attendees?.length)}{" "}
+                {attendees?.length > 0
+                  ? formatAttendeeCount(attendees?.length)
+                  : "0"}
                 <Ionicons name="people" size={16} /> attending
               </Text>
             </View>
             <View style={styles.attendeesContainer}>
               {attendees?.slice(0, 4).map((attendee, index) => (
-                <React.Fragment key={attendee.id}>
-                  <Image
-                    source={{ uri: attendee.image }}
-                    style={[
-                      styles.attendeeImage,
-                      { marginLeft: index === 0 ? 0 : -15 },
-                    ]}
-                  />
+                <React.Fragment key={index}>
+                  {attendee.image ? (
+                    <Image
+                      source={{ uri: attendee.image }}
+                      style={[styles.attendeeImage, { marginLeft: -15 }]}
+                    />
+                  ) : (
+                    <View
+                      style={[styles.attendeeInitials, { marginLeft: -15 }]}>
+                      <Text style={styles.initialsText}>
+                        {getInitials(attendee.name)}
+                      </Text>
+                    </View>
+                  )}
                 </React.Fragment>
               ))}
             </View>
@@ -113,31 +128,42 @@ const EventsDetails = ({ route }) => {
           <Text style={styles.descriptionTitle}>DESCRIPTION</Text>
           <Text style={styles.description}>{description}</Text>
         </View>
-        <View style={styles.eventTagsView}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {tags &&
             tags?.map((tag, index) => (
               <View style={styles.tagPill} key={index}>
                 <Text style={styles.tagPillText}>{tag}</Text>
               </View>
             ))}
-        </View>
+        </ScrollView>
+
         <View style={styles.mapView}>
           <Text>Map to go here</Text>
         </View>
       </ScrollView>
       <View style={styles.ticketsView}>
         <View style={styles.firstPartView}>
-          <View style={styles.ticketPriceView}>
-            <Text style={styles.ticketDenom}>KES.</Text>
-            <Text style={styles.ticketPrice}>{tickets[0].price}</Text>
-            <Text style={styles.ticketDeligation}>/ {tickets[0].name}</Text>
-          </View>
-          <View style={styles.ticketsNumberView}>
-            <Text style={styles.ticketRemainingNumber}>{ticketsAvailable}</Text>
-            <Text style={styles.ticketNumber}>
-              /{tickets[0]?.quantity} tickets remaining
-            </Text>
-          </View>
+          {isFreeEvent ? (
+            <Text style={styles.freeEventText}>Free Event</Text>
+          ) : (
+            <View>
+              <View style={styles.ticketPriceView}>
+                <Text style={styles.ticketDenom}>KES.</Text>
+                <Text style={styles.ticketPrice}>{tickets[0]?.price}</Text>
+                <Text style={styles.ticketDeligation}>
+                  / {tickets[0]?.name}
+                </Text>
+              </View>
+              <View style={styles.ticketsNumberView}>
+                <Text style={styles.ticketRemainingNumber}>
+                  {ticketsAvailable}
+                </Text>
+                <Text style={styles.ticketNumber}>
+                  /{tickets[0]?.quantity} tickets remaining
+                </Text>
+              </View>
+            </View>
+          )}
         </View>
         {isCreator ? (
           <TouchableOpacity
@@ -243,6 +269,20 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 3,
     borderColor: colors.background,
+  },
+  attendeeInitials: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.text,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 3,
+    borderColor: colors.grey,
+  },
+  initialsText: {
+    color: colors.background,
+    fontWeight: "bold",
   },
   moreAttendeesView: {
     backgroundColor: colors.background,

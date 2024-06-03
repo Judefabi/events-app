@@ -21,7 +21,9 @@ export const LocationProvider = ({ children }) => {
         let location = await Location.getCurrentPositionAsync({});
         setLocation(location);
       } catch (error) {
-        setErrorMsg(error.message);
+        console.log("Error getting location: " + JSON.stringify(error));
+        setLocation(location);
+        // setErrorMsg(error.message);
       }
     })();
   }, []);

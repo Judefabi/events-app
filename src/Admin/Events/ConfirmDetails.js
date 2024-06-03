@@ -25,7 +25,6 @@ import { useEvents } from "../../../contexts/eventsContext";
 const ConfirmDetails = ({ route }) => {
   const navigation = useNavigation();
   const { eventDetails } = route.params;
-  const { showLoader, hideLoader, showToast } = useLoading();
   const { onCreateEvent, uploading, modalVisible, setModalVisible } =
     useEvents();
   const { user } = useAuth(user);
@@ -122,8 +121,13 @@ const ConfirmDetails = ({ route }) => {
           <Text style={styles.value}>{eventDetails?.name}</Text>
 
           <Text style={styles.label}>Category:</Text>
-          <Text style={styles.value}>{eventDetails?.category}</Text>
-
+          <Text style={styles.value}>
+            {eventDetails?.tags.map((tag, index) => (
+              <View style={styles.tagContainer} key={index}>
+                <Text style={styles.tag}>{tag}</Text>
+              </View>
+            ))}
+          </Text>
           <Text style={styles.label}>Date and Time:</Text>
           <Text style={styles.value}>
             {eventDetails?.date?.toLocaleString()} {"  "}:{" "}
@@ -263,5 +267,25 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: "center",
     alignItems: "center",
+  },
+  tagContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.line,
+    borderRadius: 10,
+    padding: 5,
+    marginRight: 10,
+  },
+  tag: {
+    marginRight: 5,
+  },
+  tagsList: {
+    marginVertical: 10,
+    width: "100%",
+    backgroundColor: colors.line,
+    borderRadius: 10,
+    padding: 5,
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
 });

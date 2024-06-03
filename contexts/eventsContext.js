@@ -74,6 +74,12 @@ const EventsProvider = ({ children }) => {
       const eventDocRef = doc(eventsRef, uuidv4());
       await setDoc(eventDocRef, eventData);
 
+      // Update local state with the new event
+      setEvents((prevEvents) => [
+        ...prevEvents,
+        { id: eventId, createdAt: createdAt.toISOString(), ...eventData },
+      ]);
+
       setModalVisible(true);
     } catch (e) {
       console.log(e);

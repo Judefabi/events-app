@@ -12,12 +12,11 @@ import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../../globals/colors";
 import { useUser } from "../../../contexts/userContext";
 
-const HorizontalCard = ({ event }) => {
+const HorizontalCard = ({ event, feed }) => {
   const navigation = useNavigation();
   const { userProfile } = useUser();
 
-  const { id, name, date, time, location, description, image, attendees } =
-    event;
+  const { id, name, date, time, image, attendees } = event;
 
   const attending = attendees?.some(
     (attendee) => attendee.userId === userProfile?.uid
@@ -55,7 +54,7 @@ const HorizontalCard = ({ event }) => {
       onPress={onDetails}
       style={[
         styles.card,
-        attending ? { width: Dimensions.get("window").width * 0.9 } : null,
+        feed ? { width: Dimensions.get("window").width * 0.9 } : null,
       ]}>
       <View style={styles.cardInnerView}>
         <Image style={styles.eventImage} source={{ uri: image }} />

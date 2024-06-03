@@ -42,7 +42,7 @@ const Home = () => {
     return <LoadingSkeleton />;
   }
 
-  // console.log(userProfile);
+  console.log(events.length);
 
   const { uid, name, profileImage, email } = userProfile;
 
@@ -135,13 +135,16 @@ const Home = () => {
               <Text style={styles.viewAllText}>View All</Text>
             </TouchableOpacity>
           </View>
-          <FlatList
+          {/* <FlatList
             data={events?.slice(0, 8)}
             keyExtractor={(item) => item?.id?.toString()}
             renderItem={({ item }) => <VerticalCard event={item} />}
             contentContainerStyle={styles.flatListTrendingContainer}
             showsVerticalScrollIndicator={false}
-          />
+          /> */}
+          {events.slice(0, 5).map((event) => (
+            <VerticalCard event={event} key={event?.id} />
+          ))}
         </View>
         <TouchableOpacity
           onPress={createEvent}

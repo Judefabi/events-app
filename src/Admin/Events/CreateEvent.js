@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  FlatList,
 } from "react-native";
 import React, { useState } from "react";
 import { colors } from "../../../globals/colors";
@@ -23,12 +24,13 @@ const CreateEvent = () => {
   const [isFreeEvent, setIsFreeEvent] = useState(false);
   const [image, setImage] = useState(null);
   const [eventName, setEventName] = useState("");
-  const [eventCategory, setEventCategory] = useState("");
+  const [eventTags, setEventTags] = useState([]);
   const [eventDescription, setEventDescription] = useState("");
 
   const [eventNameValid, setEventNameValid] = useState(true);
-  const [eventCategoryValid, setEventCategoryValid] = useState(true);
+  const [eventTagsValid, setEventTagsValid] = useState(true);
   const [eventDescriptionValid, setEventDescriptionValid] = useState(true);
+  const [tagInput, setTagInput] = useState("");
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -70,11 +72,11 @@ const CreateEvent = () => {
     } else {
       setEventNameValid(true);
     }
-    if (eventCategory.trim() === "") {
-      setEventCategoryValid(false);
+    if (eventTags.length === 0) {
+      setEventTagsValid(false);
       valid = false;
     } else {
-      setEventCategoryValid(true);
+      setEventTagsValid(true);
     }
     if (eventDescription.trim() === "") {
       setEventDescriptionValid(false);
@@ -85,6 +87,19 @@ const CreateEvent = () => {
     return valid;
   };
 
+  const addTag = () => {
+    if (tagInput.trim() !== "") {
+      setEventTags([...eventTags, tagInput.trim()]);
+      setTagInput("");
+    }
+  };
+
+  const removeTag = (index) => {
+    const newTags = [...eventTags];
+    newTags.splice(index, 1);
+    setEventTags(newTags);
+  };
+
   const onNext = () => {
     if (!validateInputs()) {
       return;
@@ -93,7 +108,7 @@ const CreateEvent = () => {
     const eventDetails = {
       image,
       name: eventName,
-      category: eventCategory,
+      tags: eventTags,
       date: date.toLocaleString()?.split(",")[0],
       time: date.toLocaleString()?.split(",")[1]?.slice(0, 6),
       description: eventDescription,
@@ -154,15 +169,30 @@ const CreateEvent = () => {
           <View
             style={[
               styles.eventInputView,
-              !eventCategoryValid && { borderColor: colors.red },
+              !eventTagsValid && { borderColor: colors.red },
             ]}>
             <TextInput
               style={styles.eventInput}
-              placeholder="Event Category*"
-              value={eventCategory}
-              onChangeText={setEventCategory}
+              placeholder="Enter tags (press Enter to add)*"
+              value={tagInput}
+              onChangeText={setTagInput}
+              onSubmitEditing={addTag}
             />
           </View>
+          <FlatList
+            data={eventTags}
+            renderItem={({ item, index }) => (
+              <View style={styles.tagContainer}>
+                <Text style={styles.tag}>{item}</Text>
+                <TouchableOpacity onPress={() => removeTag(index)}>
+                  <Ionicons name="close-circle" size={20} color={colors.red} />
+                </TouchableOpacity>
+              </View>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal
+            style={styles.tagsList}
+          />
           <View style={styles.splitEventInputView}>
             <View style={styles.eventInputViewSplit}>
               <TouchableOpacity
@@ -335,5 +365,19 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
+  },
+  tagContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.line,
+    borderRadius: 10,
+    padding: 5,
+    marginRight: 5,
+  },
+  tag: {
+    marginRight: 5,
+  },
+  tagsList: {
+    marginVertical: 10,
   },
 });

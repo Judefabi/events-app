@@ -31,7 +31,7 @@ const Feed = () => {
         {confirmedEvents.length > 0 ? (
           confirmedEvents.map((event, index) => (
             <View key={index} style={styles.verticalCard}>
-              <HorizontalCard event={event} attending={true} />
+              <HorizontalCard event={event} feed={true} />
             </View>
           ))
         ) : (
