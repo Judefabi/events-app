@@ -11,6 +11,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../../globals/colors";
 import { useUser } from "../../../contexts/userContext";
+import moment from "moment";
 
 const HorizontalCard = ({ event, feed }) => {
   const navigation = useNavigation();
@@ -56,6 +57,23 @@ const HorizontalCard = ({ event, feed }) => {
     console.log("confirmed", id);
   };
 
+  const formatDate = (date) => {
+    const formattedDate = moment(date, "MM/DD/YYYY").calendar(null, {
+      sameDay: "[Today]",
+      nextDay: "[Tomorrow]",
+      nextWeek: "dddd",
+      lastDay: "[Yesterday]",
+      lastWeek: "[Last] dddd",
+      sameElse: "DD/MM/YYYY",
+    });
+    return formattedDate;
+  };
+
+  const formatTime = (time) => {
+    const formattedTime = moment(time, "HH:mm").format("hh:mm A");
+    return formattedTime;
+  };
+
   return (
     <TouchableOpacity
       onPress={onDetails}
@@ -74,11 +92,11 @@ const HorizontalCard = ({ event, feed }) => {
               style={styles.scheduleDetailIcon}
               name="calendar-clear-outline"
             />
-            <Text style={styles.eventDate}>{date}</Text>
+            <Text style={styles.eventDate}>{formatDate(date)}</Text>
           </View>
           <View style={styles.scheduleDetailView}>
             <Ionicons style={styles.scheduleDetailIcon} name="time-outline" />
-            <Text style={styles.eventTime}>{time}</Text>
+            <Text style={styles.eventTime}>{formatTime(time)}</Text>
           </View>
         </View>
       </View>

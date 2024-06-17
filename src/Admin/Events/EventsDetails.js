@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../../globals/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useEvents } from "../../../contexts/eventsContext";
+import moment from "moment";
 
 const EventsDetails = ({ route }) => {
   const navigation = useNavigation();
@@ -69,6 +70,17 @@ const EventsDetails = ({ route }) => {
     return initials.toUpperCase();
   };
 
+  const formattedDate = moment(date, "MM/DD/YYYY").calendar(null, {
+    sameDay: "[Today]",
+    nextDay: "[Tomorrow]",
+    nextWeek: "dddd",
+    lastDay: "[Yesterday]",
+    lastWeek: "[Last] dddd",
+    sameElse: "DD/MM/YYYY",
+  });
+
+  const formattedTime = moment(time, "HH:mm").format("hh:mm A");
+
   return (
     <View style={styles.mainContainer}>
       <ScrollView
@@ -83,16 +95,17 @@ const EventsDetails = ({ route }) => {
               <Text style={styles.name}>{name}</Text>
               <Text>@ {location}</Text>
             </View>
-            {isCreator && (
+            {/* {isCreator && (
               <View style={styles.editView}>
                 <Text style={styles.editEventText}>Edit Event</Text>
               </View>
-            )}
+            )} */}
           </View>
           <View style={styles.topViewDetails}>
             <View style={styles.schedulingDetailsView}>
               <Text style={styles.scheduleText}>
-                {date} <Text style={styles.strokes}>/</Text> {time}
+                {formattedDate} <Text style={styles.strokes}>/</Text>{" "}
+                {formattedTime}
                 <Text style={styles.strokes}> /</Text>{" "}
                 {attendees?.length > 0
                   ? formatAttendeeCount(attendees?.length)
@@ -127,15 +140,23 @@ const EventsDetails = ({ route }) => {
         <View style={styles.descriptionView}>
           <Text style={styles.descriptionTitle}>DESCRIPTION</Text>
           <Text style={styles.description}>{description}</Text>
+          <View style={{ flexDirection: "row" }}>
+            {tags &&
+              tags?.map((tag, index) => (
+                <View style={styles.hashtagView} key={index}>
+                  <Text style={styles.hashtagText}>#{tag}</Text>
+                </View>
+              ))}
+          </View>
         </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {tags &&
             tags?.map((tag, index) => (
               <View style={styles.tagPill} key={index}>
                 <Text style={styles.tagPillText}>{tag}</Text>
               </View>
             ))}
-        </ScrollView>
+        </ScrollView> */}
 
         <View style={styles.mapView}>
           <Text>Map to go here</Text>
@@ -391,6 +412,11 @@ const styles = StyleSheet.create({
   },
   ticketsButtonText: {
     color: colors.background,
+    fontFamily: "bold",
+  },
+  hashtagView: {},
+  hashtagText: {
+    color: "blue",
     fontFamily: "bold",
   },
 });

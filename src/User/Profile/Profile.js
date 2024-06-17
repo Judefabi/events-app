@@ -42,12 +42,33 @@ const Profile = () => {
     }
   };
 
+  // const onSwitchUser = async () => {
+  //   await AsyncStorage.setItem("type", "creator");
+  //   navigation.reset({
+  //     index: 0,
+  //     routes: [{ name: "Login" }],
+  //   });
+  // };
   const onSwitchUser = async () => {
     await AsyncStorage.setItem("type", "creator");
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "Login" }],
-    });
+    await AsyncStorage.setItem("switching", "true");
+    handleAutoLogin();
+  };
+
+  const handleAutoLogin = async () => {
+    try {
+      AsyncStorage.getItem("type").then((value) => {
+        navigation.reset({
+          index: 0,
+          routes: [
+            { name: value === "creator" ? "Admin Stack" : "User Stack" },
+          ],
+        });
+      });
+    } catch (error) {
+      console.log("Auto Login error: ", error);
+      await AsyncStorage.removeItem("switching"); // Remove the switching flag if login fails
+    }
   };
 
   const getInitials = (name) => {

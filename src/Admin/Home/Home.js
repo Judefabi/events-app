@@ -9,6 +9,7 @@ import {
   Dimensions,
   FlatList,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 import { colors } from "../../../globals/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -122,7 +123,7 @@ const Home = () => {
             data={myEvents}
             renderItem={renderItem}
             keyExtractor={(item) => item?.id?.toString()}
-            snapToInterval={Dimensions.get("window").width * 0.8}
+            snapToInterval={Dimensions.get("window").width * 0.7}
             decelerationRate="fast"
             contentContainerStyle={styles.flatListContentContainer}
             showsHorizontalScrollIndicator={false}
@@ -136,15 +137,18 @@ const Home = () => {
             </TouchableOpacity>
           </View>
           {/* <FlatList
-            data={events?.slice(0, 8)}
+            style={{ paddingBottom: 150 }}
+            data={events?.slice(0, 4)}
             keyExtractor={(item) => item?.id?.toString()}
             renderItem={({ item }) => <VerticalCard event={item} />}
             contentContainerStyle={styles.flatListTrendingContainer}
             showsVerticalScrollIndicator={false}
           /> */}
-          {events.slice(0, 5).map((event) => (
-            <VerticalCard event={event} key={event?.id} />
-          ))}
+          <ScrollView>
+            {events.slice(0, 5).map((event) => (
+              <VerticalCard event={event} key={event?.id} />
+            ))}
+          </ScrollView>
         </View>
         <TouchableOpacity
           onPress={createEvent}
