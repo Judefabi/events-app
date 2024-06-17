@@ -95,7 +95,7 @@ const Profile = () => {
         </View>
         <View style={{ paddingVertical: 20 }}>
           <TouchableOpacity onPress={onSwitchUser}>
-            <Text>Switch to Creator Account</Text>
+            <Text>Switch to Host Account</Text>
           </TouchableOpacity>
         </View>
       </View>

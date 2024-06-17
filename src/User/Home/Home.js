@@ -57,13 +57,43 @@ const Home = () => {
 
   const NoEventsHorizontalCard = () => (
     <View style={[styles.horizontalCard, styles.placeholderCard]}>
-      <Text style={styles.placeholderText}>No events available.</Text>
+      <View style={styles.placeholderFirstView}>
+        <Text style={styles.placeholderTitle}>No events today or tomorrow</Text>
+        <Text style={styles.placeholderDescription}>
+          We aim to keep you in the loop on all events happeing near you.
+        </Text>
+      </View>
+      <View style={styles.placeholderSecondView}>
+        <Image
+          source={require("../../../assets/party.png")}
+          style={styles.placeholderImage}
+        />
+      </View>
     </View>
   );
 
   const NoEventsVerticalCard = () => (
     <View style={[styles.verticalCard, styles.placeholderCard]}>
-      <Text style={styles.placeholderText}>No upcoming events.</Text>
+      <View style={styles.placeholderFirstView}>
+        <Text style={styles.placeholderTitle}>Create and share</Text>
+        <Text style={styles.placeholderDescription}>
+          Becoe a host by creatinga n event with us.
+          <Text
+            style={{
+              color: colors.green,
+              fontFamily: "bold",
+              paddingHorizontal: 5,
+            }}>
+            Click me to start!!
+          </Text>
+        </Text>
+      </View>
+      <View style={styles.placeholderSecondView}>
+        <Image
+          source={require("../../../assets/party.png")}
+          style={styles.placeholderImage}
+        />
+      </View>
     </View>
   );
 
@@ -143,7 +173,7 @@ const Home = () => {
           <Text style={styles.searchButtonText}>Search</Text>
         </TouchableOpacity>
       </View>
-      {isSearch ? (
+      {/* {isSearch ? (
         <View style={styles.popularView}>
           <Text style={styles.popularSearchTitle}>Popular searches:</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -157,7 +187,7 @@ const Home = () => {
             ))}
           </ScrollView>
         </View>
-      ) : null}
+      ) : null} */}
       <View style={styles.featuredEventsView}>
         <View style={styles.featuredEventsTitleView}>
           <Text style={styles.featuredEventsTitle}>Upcoming events</Text>
@@ -191,7 +221,7 @@ const Home = () => {
             </TouchableOpacity>
           ) : null}
         </View>
-        <ScrollView horizontal>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {todayEvents.length > 0 && isToday ? (
             todayEvents?.length > 0 ? (
               todayEvents?.map((item, index) => (
@@ -368,9 +398,36 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
+    flexDirection: "row",
+    width: Dimensions.get("window").width * 0.9,
+    marginVertical: 10,
   },
   placeholderText: {
     color: colors.text,
+  },
+  placeholderFirstView: {
+    width: Dimensions.get("window").width * 0.55,
+    marginHorizontal: 10,
+  },
+  placeholderTitle: {
+    fontFamily: "bold",
+    fontSize: 18,
+    marginBottom: 5,
+    color: colors.text,
+  },
+  placeholderDescription: {
+    fontSize: 12,
+    color: colors.grey,
+  },
+  placeholderSecondView: {
+    width: Dimensions.get("window").width * 0.3,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  placeholderImage: {
+    height: 100,
+    width: 100,
+    borderRadius: 10,
   },
   otherEventsView: {
     paddingVertical: 20,

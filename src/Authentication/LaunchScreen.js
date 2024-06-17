@@ -48,7 +48,7 @@ const LaunchScreen = () => {
           <TouchableOpacity
             style={styles.buttonCreator}
             onPress={handleCreateEventsPress}>
-            <Text style={styles.buttonCreatorText}>I Create Events</Text>
+            <Text style={styles.buttonCreatorText}>I Host Events</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
