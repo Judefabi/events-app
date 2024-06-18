@@ -15,6 +15,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
+import moment from "moment";
 
 const CreateEvent = () => {
   const navigation = useNavigation();
@@ -35,7 +36,7 @@ const CreateEvent = () => {
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
+      // allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
@@ -109,8 +110,8 @@ const CreateEvent = () => {
       image,
       name: eventName,
       tags: eventTags,
-      date: date.toLocaleString()?.split(",")[0],
-      time: date.toLocaleString()?.split(",")[1]?.slice(0, 6),
+      date: moment(date).format("MM/DD/YYYY"),
+      time: date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       description: eventDescription,
       isFreeEvent,
     };
@@ -199,7 +200,7 @@ const CreateEvent = () => {
                 onPress={showDatepicker}
                 style={styles.eventInput}>
                 <Text style={styles.dateTimeText}>
-                  Date: {date.toLocaleString()?.split(",")[0]}
+                  Date: {moment(date).format("MM/DD/YYYY")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -208,7 +209,11 @@ const CreateEvent = () => {
                 onPress={showTimepicker}
                 style={styles.eventInput}>
                 <Text style={styles.dateTimeText}>
-                  Time: {date.toLocaleString()?.split(",")[1]?.slice(0, 6)}
+                  Time:{" "}
+                  {date.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </Text>
               </TouchableOpacity>
             </View>

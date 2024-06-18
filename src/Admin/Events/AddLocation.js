@@ -29,7 +29,16 @@ const LocationSearch = ({ route }) => {
       return;
     }
 
-    const updatedEventDetails = { ...eventDetails, location, coordinates };
+    const updatedTags = [...eventDetails.tags, location];
+
+    // Create updated event details object
+
+    const updatedEventDetails = {
+      ...eventDetails,
+      location,
+      coordinates,
+      tags: updatedTags,
+    };
     // console.log("Updated dets", updatedEventDetails);
     navigation.navigate("Confirm Details", {
       eventDetails: updatedEventDetails,

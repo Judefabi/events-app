@@ -101,15 +101,15 @@ const Home = () => {
   const tomorrow = moment().add(1, "day").startOf("day");
 
   const todayEvents = events.filter((item) =>
-    moment(item.date, "DD/MM/YYYY").isSame(today, "day")
+    moment(item.date, "MM/DD/YYYY").isSame(today, "day")
   );
 
   const tomorrowEvents = events.filter((item) =>
-    moment(item.date, "DD/MM/YYYY").isSame(tomorrow, "day")
+    moment(item.date, "MM/DD/YYYY").isSame(tomorrow, "day")
   );
 
-  // console.log("Today's Events:", todayEvents);
-  // console.log("Tomorrow's Events:", tomorrowEvents);
+  console.log("Today's Events:", todayEvents);
+  console.log("Tomorrow's Events:", tomorrowEvents);
 
   const onViewAll = () => {
     navigation.navigate("Events", {

@@ -68,7 +68,7 @@ const EventsProvider = ({ children }) => {
         image: uploadUrl,
         creatorId: user?.uid,
         creator: user?.email,
-        createdAt: new Date(),
+        // createdAt: new Date(),
       };
 
       const eventDocRef = doc(eventsRef, uuidv4());
@@ -77,7 +77,11 @@ const EventsProvider = ({ children }) => {
       // Update local state with the new event
       setEvents((prevEvents) => [
         ...prevEvents,
-        { id: eventId, createdAt: createdAt.toISOString(), ...eventData },
+        {
+          id: eventId,
+          // createdAt: new Date().toDateString(),
+          ...eventData,
+        },
       ]);
 
       setModalVisible(true);
@@ -98,6 +102,8 @@ const EventsProvider = ({ children }) => {
         ...doc.data(),
       }));
 
+      // console.log(fetchedEvents.length);
+
       const currentDate = new Date();
 
       const parseDate = (dateString) => {
@@ -111,23 +117,23 @@ const EventsProvider = ({ children }) => {
       );
 
       // Sort events by proximity to user's location
-      if (location) {
-        upcomingEvents.sort((a, b) => {
-          const distanceA = calculateDistance(
-            location.coords.latitude,
-            location.coords.longitude,
-            a.coordinates.lat,
-            a.coordinates.lng
-          );
-          const distanceB = calculateDistance(
-            location.coords.latitude,
-            location.coords.longitude,
-            b.coordinates.lat,
-            b.coordinates.lng
-          );
-          return distanceA - distanceB;
-        });
-      }
+      // if (location) {
+      //   upcomingEvents.sort((a, b) => {
+      //     const distanceA = calculateDistance(
+      //       location.coords.latitude,
+      //       location.coords.longitude,
+      //       a.coordinates.lat,
+      //       a.coordinates.lng
+      //     );
+      //     const distanceB = calculateDistance(
+      //       location.coords.latitude,
+      //       location.coords.longitude,
+      //       b.coordinates.lat,
+      //       b.coordinates.lng
+      //     );
+      //     return distanceA - distanceB;
+      //   });
+      // }
 
       setEvents(upcomingEvents);
     } catch (e) {

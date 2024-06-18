@@ -283,9 +283,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   imageView: {},
+  // image: {
+  //   height: Dimensions.get("window").height * 0.3,
+  //   borderRadius: 10,
+  // },
   image: {
-    height: Dimensions.get("window").height * 0.3,
+    height: Dimensions.get("window").height * 0.4,
     borderRadius: 10,
+    objectFit: "contain",
   },
   descriptionView: {
     paddingVertical: 20,
