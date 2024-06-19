@@ -75,7 +75,16 @@ const HorizontalCard = ({ event, feed }) => {
         feed ? { width: Dimensions.get("window").width * 0.9 } : null,
       ]}>
       <View style={styles.cardInnerView}>
-        <Image style={styles.eventImage} source={{ uri: image }} />
+        <Image
+          style={styles.eventImage}
+          source={
+            image !== null
+              ? { uri: image }
+              : {
+                  uri: "https://firebasestorage.googleapis.com/v0/b/events-424620.appspot.com/o/events%2Felementor-placeholder-image.png?alt=media&token=805b3d96-1362-4ac8-8916-3e2d94406e70",
+                }
+          }
+        />
         <View style={styles.imageOverlayView}>
           {attending ? (
             <TouchableOpacity
@@ -231,7 +240,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   eventTitle: {
-    fontSize: 22,
+    fontSize: 18,
     fontFamily: "black",
     paddingVertical: 10,
   },

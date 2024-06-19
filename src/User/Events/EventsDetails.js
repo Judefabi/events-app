@@ -130,7 +130,16 @@ const EventsDetails = ({ route }) => {
           </View>
         </View>
         <View style={styles.imageView}>
-          <Image style={styles.image} source={{ uri: image }} />
+          <Image
+            style={styles.image}
+            source={
+              image !== null
+                ? { uri: image }
+                : {
+                    uri: "https://firebasestorage.googleapis.com/v0/b/events-424620.appspot.com/o/events%2Felementor-placeholder-image.png?alt=media&token=805b3d96-1362-4ac8-8916-3e2d94406e70",
+                  }
+            }
+          />
         </View>
         <View style={styles.descriptionView}>
           <Text style={styles.descriptionTitle}>DESCRIPTION</Text>

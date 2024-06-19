@@ -43,7 +43,7 @@ const Home = () => {
     return <LoadingSkeleton />;
   }
 
-  console.log(events.length);
+  // console.log(events.length);
 
   const { uid, name, profileImage, email } = userProfile;
 
@@ -81,7 +81,7 @@ const Home = () => {
             <Text style={styles.name}>Hey, {name?.split(" ")[0] || ""}</Text>
             <View style={styles.locationView}>
               <Ionicons style={styles.locationIcon} name="location-sharp" />
-              {/* <Text style={styles.location}>{location}</Text> */}
+              <Text style={styles.location}>Host</Text>
             </View>
           </View>
           <View style={styles.profileView}>

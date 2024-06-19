@@ -108,8 +108,8 @@ const Home = () => {
     moment(item.date, "MM/DD/YYYY").isSame(tomorrow, "day")
   );
 
-  console.log("Today's Events:", todayEvents);
-  console.log("Tomorrow's Events:", tomorrowEvents);
+  // console.log("Today's Events:", todayEvents);
+  // console.log("Tomorrow's Events:", tomorrowEvents);
 
   const onViewAll = () => {
     navigation.navigate("Events", {
@@ -146,7 +146,7 @@ const Home = () => {
           <Text style={styles.name}>Hey, {name?.split(" ")[0] || ""}</Text>
           <View style={styles.locationView}>
             <Ionicons style={styles.locationIcon} name="location-sharp" />
-            <Text style={styles.location}>{location}</Text>
+            <Text style={styles.location}>Attendee</Text>
           </View>
         </View>
         <View style={styles.profileView}>

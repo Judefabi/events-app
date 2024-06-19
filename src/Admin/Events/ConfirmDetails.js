@@ -120,14 +120,23 @@ const ConfirmDetails = ({ route }) => {
           <Text style={styles.label}>Event Name:</Text>
           <Text style={styles.value}>{eventDetails?.name}</Text>
 
-          <Text style={styles.label}>Category:</Text>
-          <Text style={styles.value}>
+          <Text style={styles.label}>Tags:</Text>
+          {/* <Text style={styles.value}>
             {eventDetails?.tags.map((tag, index) => (
               <View style={styles.tagContainer} key={index}>
                 <Text style={styles.tag}>{tag}</Text>
               </View>
             ))}
-          </Text>
+          </Text> */}
+          <View style={{ flexDirection: "row" }}>
+            {eventDetails?.tags &&
+              eventDetails?.tags?.map((tag, index) => (
+                <View style={styles.hashtagView} key={index}>
+                  <Text style={styles.hashtagText}>#{tag}</Text>
+                </View>
+              ))}
+          </View>
+
           <Text style={styles.label}>Date and Time:</Text>
           <Text style={styles.value}>
             {eventDetails?.date?.toLocaleString()} {"  "}:{" "}
@@ -287,5 +296,14 @@ const styles = StyleSheet.create({
     padding: 5,
     flexDirection: "row",
     flexWrap: "wrap",
+  },
+  hashtagView: {
+    flexWrap: "wrap",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  hashtagText: {
+    color: "blue",
+    fontFamily: "bold",
   },
 });
